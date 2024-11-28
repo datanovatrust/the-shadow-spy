@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+  
+  <!-- Icon Background -->
+  <rect x="0" y="0" width="32" height="32" fill="#FF8C00" rx="8" ry="8" />
+  <!-- Puzzle Piece -->
+  <path d="M8,12 L12,12 L12,8 L20,8 L20,12 L24,12 L24,20 L20,20 L20,24 L12,24 L12,20 L8,20 Z" fill="#FFF" />
+
+</svg>

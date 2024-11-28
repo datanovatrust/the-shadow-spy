@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  
+  <!-- Hills -->
+  <ellipse cx="200" cy="600" rx="300" ry="100" fill="#228B22" />
+  <ellipse cx="600" cy="600" rx="300" ry="120" fill="#2E8B57" />
+
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+  
+  <!-- Data Breach Icon -->
+  <rect x="4" y="4" width="24" height="24" fill="#8A2BE2" rx="4" ry="4" />
+  <text x="16" y="22" font-size="16" text-anchor="middle" fill="#FFFFFF" font-family="Arial">&#9888;</text>
+
+</svg>

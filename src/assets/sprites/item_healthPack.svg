@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+  
+  <!-- Health Pack -->
+  <rect x="2" y="2" width="20" height="20" fill="#FF0000" rx="4" ry="4" />
+  <!-- Cross Symbol -->
+  <rect x="11" y="6" width="2" height="12" fill="#FFF" />
+  <rect x="6" y="11" width="12" height="2" fill="#FFF" />
+
+</svg>

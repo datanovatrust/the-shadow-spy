@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+  
+  <!-- PET Skill Icon -->
+  <circle cx="16" cy="16" r="14" fill="#00CED1" />
+  <text x="16" y="22" font-size="16" text-anchor="middle" fill="#FFF">&#916;</text>
+
+</svg>

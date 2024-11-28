@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  
+  <!-- Foreground Neon Elements -->
+  <g opacity="0.8">
+    <path d="M0,550 Q200,500 400,550 T800,550" stroke="#FF10F0" stroke-width="2" fill="none"/>
+    <path d="M0,560 Q200,510 400,560 T800,560" stroke="#00FFFF" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- Vertical Light Beams -->
+  <g opacity="0.2">
+    <rect x="100" y="0" width="10" height="600" fill="url(#beamGradient)"/>
+    <rect x="400" y="0" width="10" height="600" fill="url(#beamGradient)"/>
+    <rect x="700" y="0" width="10" height="600" fill="url(#beamGradient)"/>
+  </g>
+  
+  <defs>
+    <linearGradient id="beamGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF10F0;stop-opacity:0.5"/>
+      <stop offset="100%" style="stop-color:#FF10F0;stop-opacity:0"/>
+    </linearGradient>
+  </defs>
+
+</svg>

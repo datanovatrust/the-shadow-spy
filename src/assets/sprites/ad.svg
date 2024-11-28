@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+  
+  <!-- Ad Background -->
+  <rect x="0" y="0" width="32" height="32" fill="#FFD700" />
+  <!-- Ad Symbol -->
+  <text x="16" y="20" font-size="18" text-anchor="middle" fill="#000" font-family="Arial">&#128181;</text>
+
+</svg>

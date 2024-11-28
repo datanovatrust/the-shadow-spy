@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="48">
+  
+  <!-- Cyberpunk Character -->
+  <defs>
+    <linearGradient id="bodyGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF10F0;stop-opacity:0.2"/>
+      <stop offset="50%" style="stop-color:#00FFFF;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#FF10F0;stop-opacity:0.2"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Character Body -->
+  <rect x="10" y="15" width="12" height="25" fill="#1A1A2E" />
+  <rect x="10" y="15" width="12" height="25" fill="url(#bodyGlow)" />
+  
+  <!-- Neon Trim -->
+  <path d="M10,15 L22,15 L22,40 L10,40" 
+        stroke="#FF10F0" 
+        stroke-width="1" 
+        fill="none" />
+  
+  <!-- Head with Visor -->
+  <circle cx="16" cy="10" r="8" fill="#1A1A2E" />
+  <path d="M11,8 L21,8" stroke="#00FFFF" stroke-width="1" />
+  <path d="M8,10 Q16,0 24,10" fill="#1A1A2E" stroke="#FF10F0" stroke-width="1" />
+  
+  <!-- Cyber Visor -->
+  <rect x="11" y="7" width="10" height="3" fill="#00FFFF" opacity="0.5" />
+  <line x1="11" y1="8.5" x2="21" y2="8.5" stroke="#00FFFF" stroke-width="0.5" />
+  
+  <!-- Tech Details -->
+  <line x1="10" y1="20" x2="22" y2="20" stroke="#00FFFF" stroke-width="0.5" opacity="0.5" />
+  <line x1="10" y1="30" x2="22" y2="30" stroke="#00FFFF" stroke-width="0.5" opacity="0.5" />
+
+</svg>

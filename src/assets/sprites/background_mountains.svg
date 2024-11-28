@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  
+  <!-- Mountains -->
+  <polygon points="0,600 200,300 400,600" fill="#6B8E23" />
+  <polygon points="300,600 500,250 700,600" fill="#556B2F" />
+  <polygon points="600,600 800,350 1000,600" fill="#6B8E23" />
+
+</svg>

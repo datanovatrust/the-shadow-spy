@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  
+  <!-- Cyberpunk Platforms -->
+  <g opacity="0.9">
+    <path d="M100,400 L300,400 L320,420 L80,420 Z" fill="#FF10F0" opacity="0.3"/>
+    <path d="M400,350 L600,350 L620,370 L380,370 Z" fill="#FF10F0" opacity="0.3"/>
+    <path d="M200,500 L400,500 L420,520 L180,520 Z" fill="#FF10F0" opacity="0.3"/>
+  </g>
+
+</svg>

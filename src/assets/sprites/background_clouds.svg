@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  
+  <!-- Clouds -->
+  <g id="cloud1">
+    <circle cx="100" cy="100" r="20" fill="#FFF" />
+    <circle cx="120" cy="90" r="25" fill="#FFF" />
+    <circle cx="140" cy="100" r="20" fill="#FFF" />
+  </g>
+  <g id="cloud2">
+    <circle cx="400" cy="150" r="30" fill="#FFF" />
+    <circle cx="430" cy="140" r="35" fill="#FFF" />
+    <circle cx="470" cy="150" r="30" fill="#FFF" />
+  </g>
+
+</svg>

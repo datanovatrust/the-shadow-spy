@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  
+  <!-- Cyberpunk Sky -->
+  <defs>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#120458;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#291D54;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4B1537;stop-opacity:1" />
+    </linearGradient>
+    <pattern id="grid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FF10F0" stroke-width="0.5" opacity="0.3"/>
+    </pattern>
+  </defs>
+  <rect x="0" y="0" width="800" height="600" fill="url(#skyGradient)" />
+  <rect x="0" y="0" width="800" height="600" fill="url(#grid)" />
+  
+  <!-- Cyber Moon -->
+  <circle cx="600" cy="150" r="60" fill="#FF10F0" opacity="0.5" />
+  <circle cx="600" cy="150" r="55" fill="#120458" />
+  <circle cx="600" cy="150" r="50" fill="#FF10F0" opacity="0.3" />
+
+</svg>

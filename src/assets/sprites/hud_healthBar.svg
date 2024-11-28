@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="20">
+  
+  <!-- Background -->
+  <rect x="0" y="0" width="200" height="20" fill="#555" rx="10" ry="10" />
+  <!-- Health Hearts Placeholder -->
+  <!-- Hearts will be drawn in code -->
+
+</svg>

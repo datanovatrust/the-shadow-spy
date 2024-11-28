@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="128">
+  
+  <!-- Flag Pole -->
+  <rect x="30" y="0" width="4" height="128" fill="#8B4513" />
+  <!-- Flag -->
+  <polygon points="34,0 64,16 34,32" fill="#FFD700" />
+
+</svg>

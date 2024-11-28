@@ -1,0 +1,19 @@
+{
+  "name": "privacy_quest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "generate-svgs": "node scripts/generate_svgs.js",
+    "start": "npm run generate-svgs && http-server . -c-1 -o"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "phaser": "^3.87.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

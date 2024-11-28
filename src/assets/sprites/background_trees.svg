@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  
+  <!-- Trees -->
+  <!-- Tree 1 -->
+  <rect x="100" y="400" width="20" height="100" fill="#8B4513" />
+  <circle cx="110" cy="380" r="40" fill="#006400" />
+  <!-- Tree 2 -->
+  <rect x="300" y="420" width="20" height="80" fill="#8B4513" />
+  <circle cx="310" cy="400" r="35" fill="#006400" />
+  <!-- Tree 3 -->
+  <rect x="500" y="410" width="20" height="90" fill="#8B4513" />
+  <circle cx="510" cy="390" r="38" fill="#006400" />
+
+</svg>

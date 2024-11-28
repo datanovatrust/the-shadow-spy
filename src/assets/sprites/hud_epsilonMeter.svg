@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="20">
+  
+  <!-- Background -->
+  <rect x="0" y="0" width="200" height="20" fill="#555" rx="10" ry="10" />
+  <!-- Epsilon Bar Placeholder (to be manipulated in code) -->
+  <rect id="epsilonBar" x="2" y="2" width="196" height="16"
+        fill="#00CED1" rx="8" ry="8" />
+  <!-- Epsilon Text -->
+  <text x="100" y="15" font-size="12" text-anchor="middle" fill="#FFF"
+        font-family="Arial">Epsilon</text>
+
+</svg>

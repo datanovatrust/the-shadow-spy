@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  
+  <!-- Sky -->
+  <rect x="0" y="0" width="800" height="600" fill="#1E90FF" />
+  <!-- Buildings -->
+  <rect x="0" y="300" width="100" height="300" fill="#2F4F4F" />
+  <rect x="120" y="250" width="80" height="350" fill="#2F4F4F" />
+  <rect x="220" y="320" width="150" height="280" fill="#2F4F4F" />
+  <rect x="390" y="200" width="100" height="400" fill="#2F4F4F" />
+  <rect x="510" y="280" width="90" height="320" fill="#2F4F4F" />
+  <rect x="620" y="240" width="120" height="360" fill="#2F4F4F" />
+  <!-- Windows -->
+  <g fill="#FFD700">
+    <rect x="30" y="320" width="10" height="15" />
+    <rect x="60" y="350" width="10" height="15" />
+    <!-- Add more windows as needed -->
+  </g>
+
+</svg>
