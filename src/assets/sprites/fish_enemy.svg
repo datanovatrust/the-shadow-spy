@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="32">
+  
+  <!-- Fish Enemy -->
+  <!-- Body -->
+  <ellipse cx="32" cy="16" rx="28" ry="12" fill="#FF4500" />
+  <!-- Tail -->
+  <polygon points="4,16 0,8 0,24" fill="#FF4500" />
+  <!-- Eye -->
+  <circle cx="40" cy="12" r="4" fill="#FFFFFF" />
+  <circle cx="40" cy="12" r="2" fill="#000000" />
+  <!-- Fin -->
+  <polygon points="20,8 28,16 20,24" fill="#FF6347" />
+
+</svg>

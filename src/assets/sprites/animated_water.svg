@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="200">
+  
+  <!-- Animated Water -->
+  <defs>
+    <linearGradient id="waterGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E90FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00BFFF;stop-opacity:1" />
+    </linearGradient>
+    <path id="wavePath" d="M0,50 Q50,70 100,50 T200,50 T300,50 T400,50 T500,50 T600,50 T700,50 T800,50 V200 H0 Z" />
+    <mask id="waveMask">
+      <rect x="0" y="0" width="800" height="200" fill="white" />
+      <use href="#wavePath" fill="black" />
+    </mask>
+  </defs>
+  <rect x="0" y="0" width="800" height="200" fill="url(#waterGradient)" mask="url(#waveMask)">
+    <animateTransform attributeName="transform" type="translate" from="0,0" to="-100,0" dur="5s" repeatCount="indefinite" />
+  </rect>
+
+</svg>

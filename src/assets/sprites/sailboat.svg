@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128">
+  
+  <!-- Sailboat -->
+  <!-- Hull -->
+  <path d="M16,96 L112,96 L80,112 L48,112 Z" fill="#8B4513" stroke="#5C3317" stroke-width="2" />
+  <!-- Mast -->
+  <rect x="64" y="32" width="4" height="64" fill="#5C3317" />
+  <!-- Sail -->
+  <path d="M68,32 L68,96 L96,64 Z" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="2" />
+  <!-- Flag -->
+  <path d="M66,32 L66,24 L80,28 L66,32 Z" fill="#FF0000" stroke="#CC0000" stroke-width="1" />
+
+</svg>

@@ -51,8 +51,8 @@ export class GameScene extends Phaser.Scene {
     this.player = new Player(this, 100, 450);
     this.player.scene = this;
 
-    // Create emitter for platform effects
-    this.platformParticleEmitter = this.add.particles('particle', {
+    // Create particle emitter for platform effects
+    this.platformParticleEmitter = this.add.particles(0, 0, 'particle', {
       speed: { min: -50, max: 50 },
       angle: { min: 0, max: 360 },
       scale: { start: 0.2, end: 0 },
@@ -63,8 +63,8 @@ export class GameScene extends Phaser.Scene {
       frequency: -1, // Emit manually
     });
 
-    // Create emitter for projectile effects
-    this.projectileParticleEmitter = this.add.particles('particle', {
+    // Create particle emitter for projectile effects
+    this.projectileParticleEmitter = this.add.particles(0, 0, 'particle', {
       scale: { start: 0.2, end: 0 },
       blendMode: 'ADD',
       lifespan: 100,
@@ -83,6 +83,13 @@ export class GameScene extends Phaser.Scene {
 
     // Create enemies group
     this.createEnemies();
+
+    // Set up colliders and overlaps with activeEnemies
+    this.physics.add.collider(this.activeEnemies, this.platforms);
+    this.physics.add.collider(this.activeEnemies, this.movingPlatforms);
+    this.physics.add.overlap(this.player.weapon, this.activeEnemies, this.handleWeaponEnemyCollision, null, this);
+    this.physics.add.overlap(this.player, this.activeEnemies, this.handlePlayerEnemyCollision, null, this);
+    this.physics.add.overlap(this.player.projectiles, this.activeEnemies, this.handleProjectileEnemyCollision, null, this);
 
     // Camera follow with smooth transition
     this.cameras.main.setBounds(0, 0, 8000, 600);
@@ -114,6 +121,14 @@ export class GameScene extends Phaser.Scene {
     this.createPetSkills();
     this.createWeaponPowerUps();
 
+    // // Define the 'idle' animation for the player
+    // this.anims.create({
+    //   key: 'idle',
+    //   frames: this.anims.generateFrameNumbers('player', { start: 0, end: 3 }), // Adjust frame numbers as per your sprite sheet
+    //   frameRate: 10,
+    //   repeat: -1
+    // });
+
     // Create HUD
     this.createHUD();
 
@@ -122,20 +137,12 @@ export class GameScene extends Phaser.Scene {
 
     // Overlaps for projectiles
     this.physics.add.overlap(this.player, this.enemyProjectiles, this.handleProjectileCollision, null, this);
-    this.physics.add.overlap(this.player.projectiles, this.enemies, this.handleProjectileEnemyCollision, null, this);
+    this.physics.add.overlap(this.player.projectiles, this.activeEnemies, this.handleProjectileEnemyCollision, null, this);
 
     // Boss spawn threshold
     this.nextBossEpsilonThreshold = 100;
 
-    // Initialize activeEnemies
-    this.activeEnemies = this.physics.add.group();
 
-    // Set up colliders and overlaps with activeEnemies
-    this.physics.add.collider(this.activeEnemies, this.platforms);
-    this.physics.add.collider(this.activeEnemies, this.movingPlatforms);
-    this.physics.add.overlap(this.player.weapon, this.activeEnemies, this.handleWeaponEnemyCollision, null, this);
-    this.physics.add.overlap(this.player, this.activeEnemies, this.handlePlayerEnemyCollision, null, this);
-    this.physics.add.overlap(this.player.projectiles, this.activeEnemies, this.handleProjectileEnemyCollision, null, this);
 
     // Initialize city lights array and create the lights
     this.cityLights = [];
@@ -143,8 +150,19 @@ export class GameScene extends Phaser.Scene {
 
     // Initialize frame counter for performance optimization
     this.frameCounter = 0;
+
+    // Input for menu
+    this.input.keyboard.on('keydown-M', () => {
+      this.scene.pause('GameScene'); // Pause the GameScene first
+
+      if (this.scene.isActive('MenuScene')) {
+        this.scene.bringToTop('MenuScene');
+      } else {
+        this.scene.launch('MenuScene');
+      }
+    });
   }
-  
+
   createCityLights() {
     const lightCount = 20;
     for (let i = 0; i < lightCount; i++) {
@@ -161,7 +179,7 @@ export class GameScene extends Phaser.Scene {
   createLevelTerrain() {
     // Create base terrain (replaces the simple ground platforms)
     this.createBaseGround();
-  
+
     // Create varied terrain sections
     // Section 1: Starting Area - Tutorial-style platforms with neon walkways
     const startingArea = [
@@ -170,7 +188,7 @@ export class GameScene extends Phaser.Scene {
       { x: 600, y: 400, scale: 0.7, type: 'floating' },
       { x: 750, y: 400, scale: 1, type: 'platform' }
     ];
-  
+
     // Section 2: Vertical Challenge with alternating platform types
     const verticalChallenge = [
       { x: 1000, y: 500, scale: 1, type: 'platform' },
@@ -179,14 +197,14 @@ export class GameScene extends Phaser.Scene {
       { x: 1100, y: 200, scale: 0.5, type: 'floating' },
       { x: 1200, y: 150, scale: 1, type: 'platform' }
     ];
-  
+
     // Section 3: Cyber Highway - Elevated neon walkways
     const cyberHighway = [
       { x: 1500, y: 300, scale: 2, type: 'highway' },
       { x: 1900, y: 300, scale: 2, type: 'highway' },
       { x: 2300, y: 300, scale: 2, type: 'highway' }
     ];
-  
+
     // Section 4: Data Center - Dense grid-like platform arrangement
     const dataCenter = [];
     for (let i = 0; i < 5; i++) {
@@ -199,7 +217,7 @@ export class GameScene extends Phaser.Scene {
         });
       }
     }
-  
+
     // Section 5: Quantum Maze - Sinusoidal pattern with varied heights
     const quantumMaze = [];
     let currentX = 3800;
@@ -212,7 +230,7 @@ export class GameScene extends Phaser.Scene {
       });
       currentX += Phaser.Math.Between(150, 250);
     }
-  
+
     // Section 6: Security Zone - Tight platforming with laser gaps
     const securityZone = [
       { x: 5000, y: 500, scale: 0.5, type: 'laser' },
@@ -221,7 +239,7 @@ export class GameScene extends Phaser.Scene {
       { x: 5450, y: 200, scale: 0.5, type: 'platform' },
       { x: 5600, y: 200, scale: 1.5, type: 'highway' }
     ];
-  
+
     // Section 7: Encryption Valley - Cascading platforms with data streams
     const encryptionValley = [];
     currentX = 6000;
@@ -234,7 +252,7 @@ export class GameScene extends Phaser.Scene {
       });
       currentX += 200;
     }
-  
+
     // Section 8: Final Approach - Dynamic final stretch
     const finalApproach = [
       { x: 7000, y: 400, scale: 0.7, type: 'floating' },
@@ -243,7 +261,7 @@ export class GameScene extends Phaser.Scene {
       { x: 7600, y: 250, scale: 0.5, type: 'floating' },
       { x: 7800, y: 200, scale: 1.5, type: 'highway' }
     ];
-  
+
     // Combine all sections
     const allPlatforms = [
       ...startingArea,
@@ -255,7 +273,7 @@ export class GameScene extends Phaser.Scene {
       ...encryptionValley,
       ...finalApproach
     ];
-  
+
     // Create platforms with pre-rendered visuals
     allPlatforms.forEach((platform) => {
       this.createPlatformByType(platform);
@@ -274,23 +292,21 @@ export class GameScene extends Phaser.Scene {
         repeat: -1
       });
     }
-  
+
     if (config.type === 'data') {
       // Add scrolling data effect
-      const dataStream = this.add.particles('particle', {
-        x: platform.x,
-        y: platform.y,
-        frequency: 500,
+      const dataStream = this.add.particles(platform.x, platform.y, 'particle', {
         scale: { start: 0.2, end: 0 },
         alpha: { start: 0.5, end: 0 },
         tint: 0x00FF00,
         blendMode: 'ADD',
         lifespan: 1000,
         speedY: { min: -50, max: -100 },
+        frequency: 500,
       });
     }
   }
-  
+
   addPlatformGlow(platform, config) {
     const glowColor = {
       'highway': 0x00FFFF,
@@ -299,13 +315,13 @@ export class GameScene extends Phaser.Scene {
       'data': 0x00FF00,
       'platform': 0xFF10F0
     }[config.type];
-  
+
     const glow = this.add.sprite(platform.x, platform.y + 2, 'platform_glow')
       .setScale(config.scale * 1.2)
       .setAlpha(0.3)
       .setTint(glowColor)
       .setBlendMode(Phaser.BlendModes.ADD);
-      
+
     this.tweens.add({
       targets: glow,
       alpha: 0.1,
@@ -397,7 +413,7 @@ export class GameScene extends Phaser.Scene {
   addCyberGridEffect(ground) {
     // Add a cyber grid pattern overlay
     for (let i = 0; i < ground.width; i += 20) {
-      const line = this.add.rectangle(ground.x - ground.width/2 + i, 
+      const line = this.add.rectangle(ground.x - ground.width / 2 + i,
         ground.y, 1, ground.height, 0x00FFFF, 0.3)
         .setBlendMode(Phaser.BlendModes.ADD);
     }
@@ -405,10 +421,10 @@ export class GameScene extends Phaser.Scene {
 
   addSplitLevelEffect(ground) {
     // Create a split in the middle with a neon glow
-    const split = this.add.rectangle(ground.x, ground.y, 
+    const split = this.add.rectangle(ground.x, ground.y,
       ground.width, 4, 0xFF10F0, 0.8)
       .setBlendMode(Phaser.BlendModes.ADD);
-      
+
     this.tweens.add({
       targets: split,
       alpha: 0.3,
@@ -419,10 +435,10 @@ export class GameScene extends Phaser.Scene {
   }
 
   addNeonTrim(ground, color) {
-    const trim = this.add.rectangle(ground.x, ground.y - ground.height/2, 
+    const trim = this.add.rectangle(ground.x, ground.y - ground.height / 2,
       ground.width, 2, color, 1)
       .setBlendMode(Phaser.BlendModes.ADD);
-      
+
     this.tweens.add({
       targets: trim,
       alpha: 0.5,
@@ -476,7 +492,7 @@ export class GameScene extends Phaser.Scene {
 
     // Removed particle trails to optimize performance
   }
-  
+
   createEnemies() {
     // Initialize enemy data for dynamic spawning
     this.enemyData = [
@@ -568,24 +584,75 @@ export class GameScene extends Phaser.Scene {
         x: (enemy.x - this.player.x) * 2,
         y: -100,
       });
-      
+
       if (enemy.health <= 0) {
         enemy.destroy();
-        this.activeEnemies.remove(enemy, true, true); // Remove enemy from group
+        // Remove this line:
+        // this.activeEnemies.remove(enemy, true, true); // No need to manually remove from group
       }
     }
-  }   
+  }
+
+  // Add to both GameScene and Level2Scene
+  shutdown() {
+    // Clean up physics world
+    if (this.physics && this.physics.world) {
+      this.physics.world.colliders.destroy();
+      this.physics.world.bodies.clear();
+      this.physics.world.staticBodies.clear();
+    }
+
+    // Clean up all game objects
+    this.cleanupScene();
+  }
+
+  cleanupScene() {
+    // Destroy physics groups with null checks
+    ['activeEnemies', 'platforms', 'movingPlatforms', 'weaponPowerUps',
+      'dataBreaches', 'healthPacks', 'petSkills', 'enemyProjectiles'].forEach(group => {
+        if (this[group]) {
+          this[group].clear(true, true); // Clear and destroy children
+          this[group].destroy(true);
+          this[group] = null;
+        }
+      });
+
+    // Destroy player
+    if (this.player) {
+      this.player.destroy();
+      this.player = null;
+    }
+
+    // Clean up emitters
+    if (this.platformParticleEmitter) {
+      this.platformParticleEmitter.destroy();
+      this.platformParticleEmitter = null;
+    }
+
+    if (this.projectileParticleEmitter) {
+      this.projectileParticleEmitter.destroy();
+      this.projectileParticleEmitter = null;
+    }
+
+    // Clear tweens and timers
+    this.tweens.killAll();
+    this.time.removeAllEvents();
+
+    // Clear input
+    this.input.keyboard.removeAllKeys();
+  }
+
 
   handlePlayerEnemyCollision(player, enemy) {
     if (player.activePetEffects.PE) {
       return;
     }
-  
+
     let epsilonIncrease = player.activePetEffects.DP ? 5 : 10;
     player.epsilon += epsilonIncrease;
-  
+
     this.updateEpsilonDisplay();
-  
+
     const baseKnockback = 100;
     const epsilonKnockback = player.epsilon * 5;
     const totalKnockback = baseKnockback + epsilonKnockback;
@@ -594,9 +661,9 @@ export class GameScene extends Phaser.Scene {
       x: -direction * totalKnockback,
       y: -200,
     };
-  
+
     player.takeHit(knockback);
-  
+
     if (player.epsilon >= this.nextBossEpsilonThreshold) {
       this.spawnBossGoon();
       this.nextBossEpsilonThreshold += 100;
@@ -604,7 +671,8 @@ export class GameScene extends Phaser.Scene {
 
     if (enemy.health <= 0) {
       enemy.destroy();
-      this.activeEnemies.remove(enemy, true, true); // Remove enemy from group
+      // Remove this line:
+      // this.activeEnemies.remove(enemy, true, true); // No need to manually remove from group
     }
   }
 
@@ -652,20 +720,20 @@ export class GameScene extends Phaser.Scene {
     const helper = this.physics.add.sprite(player.x, player.y, 'player');
     helper.setTint(0x32cd32); // Green tint to distinguish
     helper.body.allowGravity = false;
-  
+
     this.physics.add.overlap(helper, this.activeEnemies, (helper, enemy) => {
       enemy.takeDamage(1, { x: 0, y: 0 });
       if (enemy.health <= 0) {
         enemy.destroy();
       }
     });
-  
+
     // Move helper with player
     helper.update = () => {
       helper.x = player.x + 50;
       helper.y = player.y;
     };
-  
+
     // Remove helper after some time
     this.time.addEvent({
       delay: 10000, // Helper lasts 10 seconds
@@ -675,7 +743,7 @@ export class GameScene extends Phaser.Scene {
       },
     });
   }
-  
+
 
   handleProjectileCollision(player, projectile) {
     let epsilonIncrease = player.activePetEffects.DP ? 2 : 5;
@@ -744,17 +812,41 @@ export class GameScene extends Phaser.Scene {
   }
 
   handleProjectileEnemyCollision(projectile, enemy) {
+    if (
+      !projectile.active ||
+      !enemy.active ||
+      !projectile.body ||
+      !enemy.body
+    ) {
+      return;
+    }
+
     enemy.takeDamage(this.player.attackPower, {
       x: projectile.body.velocity.x > 0 ? 200 : -200,
       y: -50,
     });
-    
+
     if (enemy.health <= 0) {
       enemy.destroy();
-      this.activeEnemies.remove(enemy, true, true); // Remove enemy from group
     }
+
+    // Clean up the projectile
+    this.destroyProjectile(projectile);
+  }
+
+  destroyProjectile(projectile) {
+    if (projectile.overlap) {
+      this.physics.world.removeCollider(projectile.overlap);
+      projectile.overlap = null;
+    }
+    if (projectile.timerEvent) {
+      projectile.timerEvent.remove(false);
+      projectile.timerEvent = null;
+    }
+    projectile.active = false;
+    projectile.body.checkCollision.none = true;
     projectile.destroy();
-  }  
+  }
 
   homomorphicEncryptionBlast(x, y) {
     const radius = 200;
@@ -770,28 +862,114 @@ export class GameScene extends Phaser.Scene {
         });
         if (enemy.health <= 0) {
           enemy.destroy();
-          this.activeEnemies.remove(enemy, true, true); // Remove enemy from group
+          // Remove this line:
+          // this.activeEnemies.remove(enemy, true, true); // No need to manually remove from group
         }
       }
     });
-    
+
     // Simplified visual effect for performance
   }
-  
+
   spawnBossGoon() {
     const boss = new BossGoon(this, this.player.x + 500, 450, this.player.epsilon);
     this.activeEnemies.add(boss);
     this.physics.add.collider(boss, this.platforms);
     this.physics.add.collider(boss, this.movingPlatforms);
   }
-  
 
+  // Update reachFinish in GameScene
   reachFinish(player, finishPoint) {
-    this.add.text(player.x - 100, 200, 'Level Completed!', { fontSize: '48px', fill: '#fff' });
-    this.physics.pause();
-    player.setTint(0x00ff00);
+    // Immediately remove all physics overlaps and colliders
+    this.physics.world.colliders.destroy();
 
-    // Additional level completion logic
+    // Disable all input
+    this.input.keyboard.enabled = false;
+    player.disableInput = true;
+
+    // Stop all physics
+    this.physics.pause();
+
+    // Stop all movements
+    player.body.setVelocity(0);
+    this.activeEnemies.children.iterate((enemy) => {
+      if (enemy && enemy.body) {
+        enemy.body.setVelocity(0);
+      }
+    });
+
+    // Celebration effects
+    const emitter = this.add.particles(player.x, player.y, 'particle', {
+      speed: { min: -200, max: 200 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 0.5, end: 0 },
+      lifespan: 1000,
+      blendMode: 'ADD',
+      tint: [0x00FF00, 0xFF10F0, 0x00FFFF],
+      quantity: 100,
+    });
+
+    const levelCompleteText = this.add.text(player.x, player.y - 100, 'Level Completed!', {
+      fontSize: '48px',
+      fill: '#fff',
+    }).setOrigin(0.5);
+
+    // Sequence the transition effects
+    this.tweens.add({
+      targets: levelCompleteText,
+      y: player.y - 150,
+      alpha: 0,
+      duration: 2000,
+      ease: 'Power1',
+    });
+
+    // Camera effects
+    this.cameras.main.flash(500, 255, 255, 255);
+    this.cameras.main.zoomTo(2, 2000, 'Linear', true);
+
+    // Handle the transition
+    this.time.delayedCall(2500, () => {
+      // Stop particle emitter
+      emitter.stop();
+
+      // Fade out
+      this.cameras.main.fadeOut(1000, 0, 0, 0);
+
+      // Queue the scene transition
+      this.time.delayedCall(1000, () => {
+        // Clean up before transition
+        this.cleanupScene();
+
+        // Start Level2Scene
+        this.scene.start('Level2Scene');
+      });
+    });
+  }
+
+  // Add new cleanup method to GameScene
+  cleanupScene() {
+    // Destroy all physics groups
+    if (this.activeEnemies) this.activeEnemies.destroy(true);
+    if (this.platforms) this.platforms.destroy(true);
+    if (this.movingPlatforms) this.movingPlatforms.destroy(true);
+    if (this.weaponPowerUps) this.weaponPowerUps.destroy(true);
+    if (this.dataBreaches) this.dataBreaches.destroy(true);
+    if (this.healthPacks) this.healthPacks.destroy(true);
+    if (this.petSkills) this.petSkills.destroy(true);
+    if (this.enemyProjectiles) this.enemyProjectiles.destroy(true);
+
+    // Clear all tweens
+    this.tweens.killAll();
+
+    // Clear all timers
+    this.time.removeAllEvents();
+
+    // Clear all input events
+    this.input.keyboard.removeAllKeys();
+
+    // Destroy particles
+    if (this.platformParticleEmitter) this.platformParticleEmitter.destroy();
+    if (this.projectileParticleEmitter) this.projectileParticleEmitter.destroy();
   }
 
   createHUD() {
@@ -874,87 +1052,108 @@ export class GameScene extends Phaser.Scene {
   }
 
   update() {
+    // Skip update if scene is transitioning or destroyed
+    if (!this.scene.isActive('GameScene')) {
+      return;
+    }
+
     this.frameCounter++;
 
-    // Update player
-    this.player.update();
+    // Update player if it exists
+    if (this.player && this.player.active) {
+      this.player.update();
+    }
 
     // Spawn enemies when player is near
-    this.enemyData = this.enemyData.filter((data) => {
-      if (Math.abs(this.player.x - data.x) < 500) {
-        let enemy;
-        if (data.type === 'basic') {
-          enemy = new BasicGoon(this, data.x, data.y);
-        } else if (data.type === 'bigMob') {
-          enemy = new BigMobGoon(this, data.x, data.y);
+    if (this.enemyData && this.activeEnemies) {
+      this.enemyData = this.enemyData.filter((data) => {
+        if (Math.abs(this.player.x - data.x) < 500) {
+          let enemy;
+          if (data.type === 'basic') {
+            enemy = new BasicGoon(this, data.x, data.y);
+          } else if (data.type === 'bigMob') {
+            enemy = new BigMobGoon(this, data.x, data.y);
+          }
+          this.activeEnemies.add(enemy);
+          return false; // Remove from enemyData
         }
-        this.activeEnemies.add(enemy);
-        this.physics.add.collider(enemy, this.platforms);
-        this.physics.add.collider(enemy, this.movingPlatforms);
-        return false; // Remove from enemyData
-      }
-      return true; // Keep in enemyData
-    });
+        return true; // Keep in enemyData
+      });
+    }
 
     // Update active enemies
-    this.activeEnemies.children.iterate((enemy) => {
-      if (enemy && enemy.update) {
-        enemy.update();
-        // Remove enemy if it's far behind the player
-        if (enemy.x < this.player.x - 800) {
-          enemy.destroy();
-          this.activeEnemies.remove(enemy, true, true); // Remove enemy from group
-        }
-      }
-    });    
-
-    // Throttle background updates
-    if (this.frameCounter % 5 === 0) {
-      const camX = this.cameras.main.scrollX;
-      this.backgroundSky.tilePositionX = camX * 0.05;
-      this.backgroundBuildingsFar.tilePositionX = camX * 0.1;
-      this.backgroundPlatforms.tilePositionX = camX * 0.3;
-      this.backgroundForeground.tilePositionX = camX * 0.5;
-
-      // Update light beams and city lights
-      this.lightBeams.forEach(beam => {
-        beam.x -= 0.5;
-        if (beam.x < -10) {
-          beam.x = 8010;
-        }
-      });
-
-      this.cityLights.forEach(light => {
-        light.x -= 0.2;
-        if (light.x < -10) {
-          light.x = 8010;
+    if (this.activeEnemies && this.activeEnemies.children) {
+      this.activeEnemies.children.iterate((enemy) => {
+        if (enemy && enemy.active && enemy.update) {
+          enemy.update();
+          // Remove enemy if it's far behind the player
+          if (enemy.x < this.player.x - 800) {
+            enemy.destroy();
+          }
         }
       });
     }
 
+    // Throttle background updates
+    if (this.frameCounter % 5 === 0) {
+      // Check if camera and background elements exist
+      if (this.cameras && this.cameras.main) {
+        const camX = this.cameras.main.scrollX;
+
+        if (this.backgroundSky) this.backgroundSky.tilePositionX = camX * 0.05;
+        if (this.backgroundBuildingsFar) this.backgroundBuildingsFar.tilePositionX = camX * 0.1;
+        if (this.backgroundPlatforms) this.backgroundPlatforms.tilePositionX = camX * 0.3;
+        if (this.backgroundForeground) this.backgroundForeground.tilePositionX = camX * 0.5;
+
+        // Update light beams and city lights if they exist
+        if (this.lightBeams) {
+          this.lightBeams.forEach(beam => {
+            if (beam && beam.active) {
+              beam.x -= 0.5;
+              if (beam.x < -10) beam.x = 8010;
+            }
+          });
+        }
+
+        if (this.cityLights) {
+          this.cityLights.forEach(light => {
+            if (light && light.active) {
+              light.x -= 0.2;
+              if (light.x < -10) light.x = 8010;
+            }
+          });
+        }
+      }
+    }
+
     // Update platform particle effects
-    if (this.player.body.velocity.y > 0 && this.frameCounter % 5 === 0) {
+    if (this.player && this.player.body && this.platformParticleEmitter &&
+      this.player.body.velocity.y > 0 && this.frameCounter % 5 === 0) {
       this.platformParticleEmitter.emitParticleAt(this.player.x, this.player.y + 20, 1);
     }
 
     // Update projectile particle effects
-    this.player.projectiles.getChildren().forEach(projectile => {
-      if (this.frameCounter % 5 === 0) {
-        this.projectileParticleEmitter.emitParticleAt(projectile.x, projectile.y, 1);
-      }
-    });
+    if (this.player && this.player.projectiles && this.projectileParticleEmitter) {
+      this.player.projectiles.getChildren().forEach(projectile => {
+        if (projectile && projectile.active && this.frameCounter % 5 === 0) {
+          this.projectileParticleEmitter.emitParticleAt(projectile.x, projectile.y, 1);
+        }
+      });
+    }
 
     // Check if player fell off the world
-    if (this.player.y > 600) {
-      this.cameras.main.flash(500, 255, 16, 240);
-      this.cameras.main.shake(500, 0.05);
+    if (this.player && this.player.y > 600) {
+      if (this.cameras && this.cameras.main) {
+        this.cameras.main.flash(500, 255, 16, 240);
+        this.cameras.main.shake(500, 0.05);
 
-      this.time.delayedCall(500, () => {
-        this.cameras.main.fade(500, 0, 0, 0);
         this.time.delayedCall(500, () => {
-          this.scene.restart();
+          this.cameras.main.fade(500, 0, 0, 0);
+          this.time.delayedCall(500, () => {
+            this.scene.restart();
+          });
         });
-      });
+      }
     }
   }
 }

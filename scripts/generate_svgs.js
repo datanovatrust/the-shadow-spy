@@ -32,39 +32,81 @@ generateSVG('hud_petSlot.svg', 40, 40, `
         stroke="#FFF" stroke-width="2" rx="5" ry="5" />
 `);
 
-// Updated Player with cyberpunk aesthetic
+// Generate Player Character SVG
 generateSVG('player.svg', 32, 48, `
-  <!-- Cyberpunk Character -->
-  <defs>
-    <linearGradient id="bodyGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#FF10F0;stop-opacity:0.2"/>
-      <stop offset="50%" style="stop-color:#00FFFF;stop-opacity:0.3"/>
-      <stop offset="100%" style="stop-color:#FF10F0;stop-opacity:0.2"/>
-    </linearGradient>
-  </defs>
-  
-  <!-- Character Body -->
-  <rect x="10" y="15" width="12" height="25" fill="#1A1A2E" />
-  <rect x="10" y="15" width="12" height="25" fill="url(#bodyGlow)" />
-  
-  <!-- Neon Trim -->
-  <path d="M10,15 L22,15 L22,40 L10,40" 
-        stroke="#FF10F0" 
-        stroke-width="1" 
-        fill="none" />
-  
-  <!-- Head with Visor -->
-  <circle cx="16" cy="10" r="8" fill="#1A1A2E" />
-  <path d="M11,8 L21,8" stroke="#00FFFF" stroke-width="1" />
-  <path d="M8,10 Q16,0 24,10" fill="#1A1A2E" stroke="#FF10F0" stroke-width="1" />
-  
-  <!-- Cyber Visor -->
-  <rect x="11" y="7" width="10" height="3" fill="#00FFFF" opacity="0.5" />
-  <line x1="11" y1="8.5" x2="21" y2="8.5" stroke="#00FFFF" stroke-width="0.5" />
-  
-  <!-- Tech Details -->
-  <line x1="10" y1="20" x2="22" y2="20" stroke="#00FFFF" stroke-width="0.5" opacity="0.5" />
-  <line x1="10" y1="30" x2="22" y2="30" stroke="#00FFFF" stroke-width="0.5" opacity="0.5" />
+  <!-- Pixel Art Player Character -->
+  <!-- Standing Frame -->
+  <g id="standing">
+    <!-- Trench Coat -->
+    <rect x="12" y="24" width="8" height="20" fill="#D4C4A8" />
+    <rect x="11" y="24" width="10" height="4" fill="#BEB19A" />
+    
+    <!-- Suit -->
+    <rect x="13" y="20" width="6" height="8" fill="#2F2F2F" />
+    
+    <!-- Head -->
+    <rect x="13" y="16" width="6" height="6" fill="#E6D5C1" />
+    
+    <!-- Sunglasses -->
+    <rect x="13" y="18" width="6" height="2" fill="#000000" />
+    
+    <!-- Hair -->
+    <rect x="13" y="16" width="6" height="2" fill="#4A3C31" />
+    
+    <!-- Shoes -->
+    <rect x="12" y="44" width="4" height="2" fill="#000000" />
+  </g>
+
+  <!-- Running Frame 1 -->
+  <g id="run1" visibility="hidden">
+    <!-- Trench Coat -->
+    <rect x="12" y="24" width="8" height="18" fill="#D4C4A8" />
+    <rect x="11" y="24" width="10" height="4" fill="#BEB19A" />
+    
+    <!-- Legs -->
+    <rect x="12" y="42" width="3" height="4" fill="#2F2F2F" />
+    <rect x="17" y="42" width="3" height="4" fill="#2F2F2F" />
+    
+    <!-- Same upper body as standing -->
+    <rect x="13" y="20" width="6" height="8" fill="#2F2F2F" />
+    <rect x="13" y="16" width="6" height="6" fill="#E6D5C1" />
+    <rect x="13" y="18" width="6" height="2" fill="#000000" />
+    <rect x="13" y="16" width="6" height="2" fill="#4A3C31" />
+  </g>
+
+  <!-- Running Frame 2 -->
+  <g id="run2" visibility="hidden">
+    <!-- Trench Coat -->
+    <rect x="12" y="24" width="8" height="18" fill="#D4C4A8" />
+    <rect x="11" y="24" width="10" height="4" fill="#BEB19A" />
+    
+    <!-- Legs -->
+    <rect x="14" y="42" width="3" height="4" fill="#2F2F2F" />
+    <rect x="15" y="42" width="3" height="4" fill="#2F2F2F" />
+    
+    <!-- Same upper body as standing -->
+    <rect x="13" y="20" width="6" height="8" fill="#2F2F2F" />
+    <rect x="13" y="16" width="6" height="6" fill="#E6D5C1" />
+    <rect x="13" y="18" width="6" height="2" fill="#000000" />
+    <rect x="13" y="16" width="6" height="2" fill="#4A3C31" />
+  </g>
+
+  <!-- Animation -->
+  <style>
+    @keyframes run {
+      0% { visibility: visible; }
+      33% { visibility: hidden; }
+      66% { visibility: hidden; }
+      100% { visibility: visible; }
+    }
+    #run1 {
+      animation: run 0.3s steps(1) infinite;
+    }
+    #run2 {
+      animation: run 0.3s steps(1) infinite;
+      animation-delay: 0.15s;
+    }
+  </style>
 `);
 
 // Generate PET Skill Icons
@@ -634,4 +676,294 @@ generateSVG('neon_trail.svg', 64, 16, `
 // Generate Particle SVG
 generateSVG('particle.svg', 4, 4, `
   <circle cx="2" cy="2" r="2" fill="#FFFFFF" />
+`);
+
+// Generate Menu Background SVG
+generateSVG('menu_background.svg', 800, 600, `
+  <!-- Menu Background -->
+  <defs>
+    <linearGradient id="menuGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0c29;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#302b63;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#24243e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="800" height="600" fill="url(#menuGradient)" />
+  <!-- Optional: Add decorative elements like logos or patterns -->
+  <text x="400" y="200" font-size="48" text-anchor="middle" fill="#FFFFFF" font-family="Arial">Game Title</text>
+`);
+
+// Generate Start Button SVG
+generateSVG('start_button.svg', 200, 80, `
+  <!-- Start Button -->
+  <rect x="0" y="0" width="200" height="80" rx="20" ry="20" fill="#FF10F0" />
+  <text x="100" y="50" font-size="32" text-anchor="middle" fill="#FFFFFF" font-family="Arial" alignment-baseline="middle">Start</text>
+`);
+
+// --- New SVG Assets for the Boat-Themed Level ---
+
+// Generate Sailboat SVG
+generateSVG('sailboat.svg', 128, 128, `
+  <!-- Sailboat -->
+  <!-- Hull -->
+  <path d="M16,96 L112,96 L80,112 L48,112 Z" fill="#8B4513" stroke="#5C3317" stroke-width="2" />
+  <!-- Mast -->
+  <rect x="64" y="32" width="4" height="64" fill="#5C3317" />
+  <!-- Sail -->
+  <path d="M68,32 L68,96 L96,64 Z" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="2" />
+  <!-- Flag -->
+  <path d="M66,32 L66,24 L80,28 L66,32 Z" fill="#FF0000" stroke="#CC0000" stroke-width="1" />
+`);
+
+// Generate Wooden Platform SVG
+generateSVG('wooden_platform.svg', 128, 32, `
+  <!-- Wooden Platform -->
+  <rect x="0" y="0" width="128" height="32" fill="#DEB887" />
+  <!-- Plank Lines -->
+  <line x1="32" y1="0" x2="32" y2="32" stroke="#A0522D" stroke-width="2" />
+  <line x1="64" y1="0" x2="64" y2="32" stroke="#A0522D" stroke-width="2" />
+  <line x1="96" y1="0" x2="96" y2="32" stroke="#A0522D" stroke-width="2" />
+  <!-- Wood Grain -->
+  <path d="M0,8 Q16,12 32,8 T64,8 T96,8 T128,8" stroke="#CD853F" stroke-width="1" fill="none" />
+  <path d="M0,24 Q16,20 32,24 T64,24 T96,24 T128,24" stroke="#CD853F" stroke-width="1" fill="none" />
+`);
+
+// Generate River Background SVG
+generateSVG('background_river.svg', 800, 600, `
+  <!-- River Background -->
+  <rect x="0" y="0" width="800" height="600" fill="#87CEEB" />
+  <!-- Water -->
+  <rect x="0" y="300" width="800" height="300" fill="#1E90FF" />
+  <!-- Waves -->
+  <path d="M0,350 Q50,340 100,350 T200,350 T300,350 T400,350 T500,350 T600,350 T700,350 T800,350" stroke="#ADD8E6" stroke-width="2" fill="none" />
+  <path d="M0,370 Q50,360 100,370 T200,370 T300,370 T400,370 T500,370 T600,370 T700,370 T800,370" stroke="#ADD8E6" stroke-width="2" fill="none" opacity="0.7" />
+`);
+
+// Generate Whimsical Tree SVG
+generateSVG('tree.svg', 64, 128, `
+  <!-- Tree -->
+  <!-- Trunk -->
+  <rect x="28" y="64" width="8" height="64" fill="#8B4513" />
+  <!-- Leaves -->
+  <circle cx="32" cy="48" r="32" fill="#32CD32" />
+  <!-- Additional Leaves for Whimsy -->
+  <circle cx="16" cy="64" r="16" fill="#32CD32" />
+  <circle cx="48" cy="64" r="16" fill="#32CD32" />
+`);
+
+// Generate New Player Character SVG with Whimsical Style
+generateSVG('player.svg', 32, 48, `
+  <!-- Whimsical Player Character -->
+  <!-- Body -->
+  <rect x="12" y="24" width="8" height="20" fill="#FFDAB9" />
+  <!-- Head -->
+  <circle cx="16" cy="16" r="8" fill="#FFE4B5" />
+  <!-- Eyes -->
+  <circle cx="13" cy="14" r="1.5" fill="#000000" />
+  <circle cx="19" cy="14" r="1.5" fill="#000000" />
+  <!-- Smile -->
+  <path d="M13,18 Q16,21 19,18" stroke="#000000" stroke-width="1" fill="none" />
+  <!-- Hat -->
+  <ellipse cx="16" cy="10" rx="10" ry="4" fill="#FF69B4" />
+`);
+
+// Generate Cloud SVG
+generateSVG('cloud.svg', 128, 64, `
+  <!-- Whimsical Cloud -->
+  <circle cx="32" cy="32" r="20" fill="#FFFFFF" />
+  <circle cx="52" cy="32" r="25" fill="#FFFFFF" />
+  <circle cx="72" cy="32" r="20" fill="#FFFFFF" />
+  <circle cx="52" cy="22" r="18" fill="#FFFFFF" />
+`);
+
+// Generate Sun SVG
+generateSVG('sun.svg', 64, 64, `
+  <!-- Sun -->
+  <circle cx="32" cy="32" r="16" fill="#FFD700" />
+  <!-- Rays -->
+  ${[...Array(12)].map((_, i) => {
+    const angle = (i * 30) * (Math.PI / 180);
+    const x1 = 32 + Math.cos(angle) * 20;
+    const y1 = 32 + Math.sin(angle) * 20;
+    const x2 = 32 + Math.cos(angle) * 28;
+    const y2 = 32 + Math.sin(angle) * 28;
+    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#FFD700" stroke-width="2" />`;
+  }).join('\n')}
+`);
+
+// Generate Fish Enemy SVG
+generateSVG('fish_enemy.svg', 64, 32, `
+  <!-- Fish Enemy -->
+  <!-- Body -->
+  <ellipse cx="32" cy="16" rx="28" ry="12" fill="#FF4500" />
+  <!-- Tail -->
+  <polygon points="4,16 0,8 0,24" fill="#FF4500" />
+  <!-- Eye -->
+  <circle cx="40" cy="12" r="4" fill="#FFFFFF" />
+  <circle cx="40" cy="12" r="2" fill="#000000" />
+  <!-- Fin -->
+  <polygon points="20,8 28,16 20,24" fill="#FF6347" />
+`);
+
+// Generate Lily Pad Platform SVG
+generateSVG('lily_pad.svg', 64, 32, `
+  <!-- Lily Pad Platform -->
+  <ellipse cx="32" cy="16" rx="30" ry="14" fill="#32CD32" />
+  <path d="M32,16 L32,2 A30,14 0 0,0 32,16" fill="#2E8B57" />
+`);
+
+// Generate Wooden Bridge or Dock SVG
+generateSVG('dock.svg', 256, 64, `
+  <!-- Wooden Dock -->
+  <rect x="0" y="32" width="256" height="32" fill="#A0522D" />
+  <!-- Planks -->
+  ${[...Array(16)].map((_, i) => {
+    const x = i * 16;
+    return `<line x1="${x}" y1="32" x2="${x}" y2="64" stroke="#8B4513" stroke-width="2" />`;
+  }).join('\n')}
+  <!-- Support Beams -->
+  <rect x="0" y="64" width="8" height="32" fill="#8B4513" />
+  <rect x="248" y="64" width="8" height="32" fill="#8B4513" />
+`);
+
+// Generate Animated Water SVG
+generateSVG('animated_water.svg', 800, 200, `
+  <!-- Animated Water -->
+  <defs>
+    <linearGradient id="waterGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E90FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00BFFF;stop-opacity:1" />
+    </linearGradient>
+    <path id="wavePath" d="M0,50 Q50,70 100,50 T200,50 T300,50 T400,50 T500,50 T600,50 T700,50 T800,50 V200 H0 Z" />
+    <mask id="waveMask">
+      <rect x="0" y="0" width="800" height="200" fill="white" />
+      <use href="#wavePath" fill="black" />
+    </mask>
+  </defs>
+  <rect x="0" y="0" width="800" height="200" fill="url(#waterGradient)" mask="url(#waveMask)">
+    <animateTransform attributeName="transform" type="translate" from="0,0" to="-100,0" dur="5s" repeatCount="indefinite" />
+  </rect>
+`);
+
+// Generate Bird SVG with Simple Animation
+generateSVG('bird.svg', 64, 64, `
+  <!-- Bird -->
+  <g>
+    <!-- Body -->
+    <ellipse cx="32" cy="32" rx="16" ry="12" fill="#FFD700" />
+    <!-- Wing -->
+    <path id="wing" d="M32,32 Q20,20 24,32 Q20,44 32,32" fill="#FFA500" />
+    <!-- Eye -->
+    <circle cx="38" cy="28" r="2" fill="#000" />
+    <!-- Beak -->
+    <polygon points="44,32 38,30 38,34" fill="#FF8C00" />
+  </g>
+  <!-- Wing Flap Animation -->
+  <animateTransform href="#wing" attributeName="transform" type="rotate" from="0 32 32" to="10 32 32" dur="0.5s" repeatCount="indefinite" direction="alternate" />
+`);
+
+// Generate Butterfly SVG with Simple Animation
+generateSVG('butterfly.svg', 64, 64, `
+  <!-- Butterfly -->
+  <g>
+    <!-- Body -->
+    <rect x="30" y="28" width="4" height="8" fill="#8B4513" />
+    <!-- Left Wing -->
+    <path id="leftWing" d="M32,32 C20,20 10,30 32,40" fill="#FF69B4" />
+    <!-- Right Wing -->
+    <path id="rightWing" d="M32,32 C44,20 54,30 32,40" fill="#FF69B4" />
+    <!-- Antennae -->
+    <line x1="32" y1="28" x2="28" y2="20" stroke="#8B4513" stroke-width="2" />
+    <line x1="32" y1="28" x2="36" y2="20" stroke="#8B4513" stroke-width="2" />
+  </g>
+  <!-- Wing Flap Animation -->
+  <animateTransform href="#leftWing" attributeName="transform" type="rotate" from="0 32 32" to="-10 32 32" dur="1s" repeatCount="indefinite" direction="alternate" />
+  <animateTransform href="#rightWing" attributeName="transform" type="rotate" from="0 32 32" to="10 32 32" dur="1s" repeatCount="indefinite" direction="alternate" />
+`);
+
+// Generate AI Helper SVG
+generateSVG('ai_helper.svg', 32, 48, `
+  <!-- AI Helper Character -->
+  <!-- Body -->
+  <rect x="12" y="24" width="8" height="20" fill="#32CD32" />
+  <!-- Head -->
+  <circle cx="16" cy="16" r="8" fill="#90EE90" />
+  <!-- Eyes -->
+  <circle cx="13" cy="14" r="1.5" fill="#000000" />
+  <circle cx="19" cy="14" r="1.5" fill="#000000" />
+  <!-- Antennae -->
+  <line x1="16" y1="8" x2="12" y2="4" stroke="#32CD32" stroke-width="2" />
+  <line x1="16" y1="8" x2="20" y2="4" stroke="#32CD32" stroke-width="2" />
+  <!-- Smile -->
+  <path d="M13,18 Q16,21 19,18" stroke="#000000" stroke-width="1" fill="none" />
+`);
+
+// Terminal Sprite for Minigames
+generateSVG('terminal_sprite.svg', 32, 48, `
+  <!-- Terminal Sprite -->
+  <rect x="4" y="8" width="24" height="32" fill="#000080" rx="4" ry="4" />
+  <!-- Screen -->
+  <rect x="8" y="12" width="16" height="20" fill="#00CED1" />
+  <!-- Keyboard -->
+  <rect x="8" y="34" width="16" height="4" fill="#333" />
+`);
+
+// AI Helper Sprite
+generateSVG('ai_helper.svg', 32, 48, `
+  <!-- AI Helper Character -->
+  <!-- Body -->
+  <rect x="12" y="24" width="8" height="20" fill="#32CD32" />
+  <!-- Head -->
+  <circle cx="16" cy="16" r="8" fill="#90EE90" />
+  <!-- Eyes -->
+  <circle cx="13" cy="14" r="1.5" fill="#000000" />
+  <circle cx="19" cy="14" r="1.5" fill="#000000" />
+  <!-- Antennae -->
+  <line x1="16" y1="8" x2="12" y2="4" stroke="#32CD32" stroke-width="2" />
+  <line x1="16" y1="8" x2="20" y2="4" stroke="#32CD32" stroke-width="2" />
+  <!-- Smile -->
+  <path d="M13,18 Q16,21 19,18" stroke="#000000" stroke-width="1" fill="none" />
+`);
+
+// Fish Enemy Sprite
+generateSVG('fish_enemy.svg', 64, 32, `
+  <!-- Fish Enemy -->
+  <!-- Body -->
+  <ellipse cx="32" cy="16" rx="28" ry="12" fill="#FF4500" />
+  <!-- Tail -->
+  <polygon points="4,16 0,8 0,24" fill="#FF4500" />
+  <!-- Eye -->
+  <circle cx="40" cy="12" r="4" fill="#FFFFFF" />
+  <circle cx="40" cy="12" r="2" fill="#000000" />
+  <!-- Fin -->
+  <polygon points="20,8 28,16 20,24" fill="#FF6347" />
+`);
+
+// Sailboat Sprite
+generateSVG('sailboat.svg', 128, 128, `
+  <!-- Sailboat -->
+  <!-- Hull -->
+  <path d="M16,96 L112,96 L80,112 L48,112 Z" fill="#8B4513" stroke="#5C3317" stroke-width="2" />
+  <!-- Mast -->
+  <rect x="64" y="32" width="4" height="64" fill="#5C3317" />
+  <!-- Sail -->
+  <path d="M68,32 L68,96 L96,64 Z" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="2" />
+  <!-- Flag -->
+  <path d="M66,32 L66,24 L80,28 L66,32 Z" fill="#FF0000" stroke="#CC0000" stroke-width="1" />
+`);
+
+// Terminal Sprite (if not already generated)
+generateSVG('terminal_sprite.svg', 32, 48, `
+  <!-- Terminal Sprite -->
+  <rect x="4" y="8" width="24" height="32" fill="#000080" rx="4" ry="4" />
+  <!-- Screen -->
+  <rect x="8" y="12" width="16" height="20" fill="#00CED1" />
+  <!-- Keyboard -->
+  <rect x="8" y="34" width="16" height="4" fill="#333" />
+`);
+
+// For example, if 'dataPoint' sprite is needed for the minigame:
+generateSVG('dataPoint.svg', 16, 16, `
+  <!-- Data Point -->
+  <circle cx="8" cy="8" r="8" fill="#FFD700" />
 `);

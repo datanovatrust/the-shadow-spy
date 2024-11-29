@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+  
+  <!-- Bird -->
+  <g>
+    <!-- Body -->
+    <ellipse cx="32" cy="32" rx="16" ry="12" fill="#FFD700" />
+    <!-- Wing -->
+    <path id="wing" d="M32,32 Q20,20 24,32 Q20,44 32,32" fill="#FFA500" />
+    <!-- Eye -->
+    <circle cx="38" cy="28" r="2" fill="#000" />
+    <!-- Beak -->
+    <polygon points="44,32 38,30 38,34" fill="#FF8C00" />
+  </g>
+  <!-- Wing Flap Animation -->
+  <animateTransform href="#wing" attributeName="transform" type="rotate" from="0 32 32" to="10 32 32" dur="0.5s" repeatCount="indefinite" direction="alternate" />
+
+</svg>

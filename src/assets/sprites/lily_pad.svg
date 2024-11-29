@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="32">
+  
+  <!-- Lily Pad Platform -->
+  <ellipse cx="32" cy="16" rx="30" ry="14" fill="#32CD32" />
+  <path d="M32,16 L32,2 A30,14 0 0,0 32,16" fill="#2E8B57" />
+
+</svg>

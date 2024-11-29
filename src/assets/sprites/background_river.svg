@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  
+  <!-- River Background -->
+  <rect x="0" y="0" width="800" height="600" fill="#87CEEB" />
+  <!-- Water -->
+  <rect x="0" y="300" width="800" height="300" fill="#1E90FF" />
+  <!-- Waves -->
+  <path d="M0,350 Q50,340 100,350 T200,350 T300,350 T400,350 T500,350 T600,350 T700,350 T800,350" stroke="#ADD8E6" stroke-width="2" fill="none" />
+  <path d="M0,370 Q50,360 100,370 T200,370 T300,370 T400,370 T500,370 T600,370 T700,370 T800,370" stroke="#ADD8E6" stroke-width="2" fill="none" opacity="0.7" />
+
+</svg>

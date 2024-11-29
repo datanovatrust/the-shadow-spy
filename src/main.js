@@ -2,18 +2,23 @@
 
 import { BootScene } from './scenes/BootScene.js';
 import { PreloadScene } from './scenes/PreloadScene.js';
+import { MenuScene } from './scenes/MenuScene.js';
 import { GameScene } from './scenes/GameScene.js';
+import { PauseScene } from './scenes/PauseScene.js';
+import { Level2Scene } from './scenes/Level2Scene.js';
 
 const config = {
   type: Phaser.AUTO,
   width: 800,
   height: 600,
-  backgroundColor: '#000000',
+  scene: [BootScene, PreloadScene, MenuScene, GameScene, PauseScene, Level2Scene],
   physics: {
     default: 'arcade',
-    arcade: { gravity: { y: 500 }, debug: false },
+    arcade: {
+      gravity: { y: 500 },
+      debug: false,
+    },
   },
-  scene: [BootScene, PreloadScene, GameScene],
 };
 
 const game = new Phaser.Game(config);

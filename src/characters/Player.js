@@ -3,6 +3,8 @@
 export class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y) {
     super(scene, x, y, 'player');
+
+    // Add the player to the scene
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
@@ -21,8 +23,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     // Enable collision with world bounds
     this.setCollideWorldBounds(true);
 
-    // Adjust player size for better collision
-    this.setSize(16, 32).setOffset(8, 16);
+    // Adjust player size for better collision (adjust as needed)
+    this.setSize(32, 48).setOffset(0, 0);
 
     // Input keys
     this.cursors = scene.input.keyboard.createCursorKeys();
@@ -40,12 +42,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     // Weapon
     this.weapon = scene.add.sprite(this.x, this.y, 'attackAnimation');
     this.weapon.setVisible(false);
+    this.weapon.active = false;
+
+    // Initialize physics for the weapon
+    scene.physics.add.existing(this.weapon);
+    this.weapon.body.allowGravity = false;
+    this.weapon.body.setSize(32, 32);
+    this.weapon.body.setCircle(16);
+    this.weapon.body.setOffset(0, 0);
+    this.weapon.body.checkCollision.none = true;
 
     // Projectile Group
     this.projectiles = scene.physics.add.group();
-
-    // Timers for PET effects
-    this.petTimers = {};
 
     // Jump variables
     this.jumpCount = 0;
@@ -97,10 +105,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     // Attacking
-    if (
-      Phaser.Input.Keyboard.JustDown(this.attackKey) &&
-      !this.isAttacking
-    ) {
+    if (Phaser.Input.Keyboard.JustDown(this.attackKey) && !this.isAttacking) {
       this.attack();
     }
 
@@ -111,46 +116,31 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     // PET activation
-    if (
-      Phaser.Input.Keyboard.JustDown(this.petKeys.DP) &&
-      this.petSkills.DP
-    ) {
-      this.activatePetSkill('DP');
-    }
-    if (
-      Phaser.Input.Keyboard.JustDown(this.petKeys.FL) &&
-      this.petSkills.FL
-    ) {
-      this.activatePetSkill('FL');
-    }
-    if (
-      Phaser.Input.Keyboard.JustDown(this.petKeys.HE) &&
-      this.petSkills.HE
-    ) {
-      this.activatePetSkill('HE');
-    }
-    if (
-      Phaser.Input.Keyboard.JustDown(this.petKeys.PE) &&
-      this.petSkills.PE
-    ) {
-      this.activatePetSkill('PE');
+    for (const skill in this.petKeys) {
+      if (Phaser.Input.Keyboard.JustDown(this.petKeys[skill]) && this.petSkills[skill]) {
+        this.activatePetSkill(skill);
+      }
     }
   }
 
   attack() {
     this.isAttacking = true;
     this.weapon.setVisible(true);
-
-    // Enable weapon physics body
-    this.scene.physics.world.enable(this.weapon);
-    this.weapon.body.allowGravity = false;
-    this.weapon.body.setSize(32, 32);
-    this.weapon.body.setCircle(16);
-    this.weapon.body.setOffset(0, 0);
+    this.weapon.active = true;
+    this.weapon.body.checkCollision.none = false;
 
     // Set weapon position
     this.weapon.x = this.x + (this.direction === 'left' ? -20 : 20);
     this.weapon.y = this.y;
+
+    // Set up the overlap dynamically
+    this.weaponOverlap = this.scene.physics.add.overlap(
+      this.weapon,
+      this.scene.activeEnemies,
+      this.scene.handleWeaponEnemyCollision,
+      null,
+      this.scene
+    );
 
     // Fire projectile
     this.fireProjectile();
@@ -161,31 +151,51 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       callback: () => {
         this.weapon.setVisible(false);
         this.isAttacking = false;
-        this.weapon.body.enable = false;
+        this.weapon.active = false;
+        this.weapon.body.checkCollision.none = true;
+
+        // Remove the overlap
+        this.scene.physics.world.removeCollider(this.weaponOverlap);
       },
     });
   }
 
   fireProjectile() {
-    const projectile = this.projectiles.create(
-      this.x,
-      this.y,
-      'projectile' // Use the new 'projectile' asset
-    );
+    const projectile = this.projectiles.create(this.x, this.y, 'projectile');
     projectile.setScale(0.5 + 0.1 * this.weaponLevel);
     projectile.body.allowGravity = false;
     projectile.body.setCircle(8 + 2 * this.weaponLevel);
+    projectile.damage = this.attackPower;
+    projectile.active = true;
 
     const velocity = this.direction === 'left' ? -300 : 300;
     projectile.setVelocityX(velocity);
 
-    projectile.damage = this.attackPower;
+    // Set up overlap for this projectile
+    projectile.overlap = this.scene.physics.add.overlap(
+      projectile,
+      this.scene.activeEnemies,
+      this.scene.handleProjectileEnemyCollision,
+      null,
+      this.scene
+    );
 
-    // Destroy projectile after some time
-    this.scene.time.addEvent({
+    // Store the timer event for later cancellation
+    projectile.timerEvent = this.scene.time.addEvent({
       delay: 2000,
       callback: () => {
-        projectile.destroy();
+        if (projectile && projectile.body) {
+          projectile.active = false;
+          projectile.body.checkCollision.none = true;
+
+          // Remove overlap collider
+          if (projectile.overlap) {
+            this.scene.physics.world.removeCollider(projectile.overlap);
+            projectile.overlap = null;
+          }
+
+          projectile.destroy();
+        }
       },
     });
   }
@@ -208,18 +218,20 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           delay: 10000, // Effect lasts 10 seconds
           callback: () => {
             this.activePetEffects.DP = false;
+            this.scene.updatePetHUD();
           },
         });
         break;
       case 'FL':
         // Summon AI helper
         this.activePetEffects.FL = true;
-        this.scene.spawnAIHelper(this);
+        this.spawnAIHelper();
         break;
       case 'HE':
         // Area-of-effect attack
         this.activePetEffects.HE = true;
         this.scene.homomorphicEncryptionBlast(this.x, this.y);
+        this.activePetEffects.HE = false; // Immediate effect
         break;
       case 'PE':
         // Become invisible to enemies
@@ -228,6 +240,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           delay: 10000, // Effect lasts 10 seconds
           callback: () => {
             this.activePetEffects.PE = false;
+            this.scene.updatePetHUD();
           },
         });
         break;
@@ -236,21 +249,65 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene.updatePetHUD();
   }
 
-  upgradeWeapon() {
-    if (this.weaponLevel < 3) {
-      this.weaponLevel += 1;
-      this.attackPower += 1;
-      this.scene.showMessage(
-        `Weapon upgraded to Level ${this.weaponLevel}!`,
-        this.x,
-        this.y - 50
-      );
-    }
+  spawnAIHelper() {
+    const helper = this.scene.physics.add.sprite(this.x + 50, this.y, 'ai_helper');
+    helper.setTint(0x32cd32); // Green tint to distinguish
+    helper.body.allowGravity = false;
+
+    // AI helper behavior
+    helper.update = () => {
+      helper.x = this.x + 50;
+      helper.y = this.y;
+    };
+
+    // Helper attacks enemies
+    this.scene.physics.add.overlap(
+      helper,
+      this.scene.activeEnemies,
+      (helper, enemy) => {
+        enemy.takeDamage(1, { x: 0, y: 0 });
+        if (enemy.health <= 0) {
+          enemy.destroy();
+        }
+      }
+    );
+
+    // Remove helper after some time
+    this.scene.time.addEvent({
+      delay: 10000, // Helper lasts 10 seconds
+      callback: () => {
+        helper.destroy();
+        this.activePetEffects.FL = false;
+        this.scene.updatePetHUD();
+      },
+    });
+  }
+
+  upgradeWeapon(improvementFactor = 1) {
+    // Upgrade weapon based on improvementFactor
+    const upgradeAmount = Math.ceil(improvementFactor * 2); // Adjust scaling as needed
+    this.weaponLevel += upgradeAmount;
+    this.attackPower += upgradeAmount;
+
+    this.scene.showMessage(
+      `Weapon upgraded to Level ${this.weaponLevel}!`,
+      this.x,
+      this.y - 50
+    );
   }
 
   takeHit(knockback) {
     // Apply knockback
     this.setVelocityX(knockback.x);
     this.setVelocityY(knockback.y);
+
+    // Reduce health
+    this.health -= 1;
+    this.scene.updateHealthDisplay();
+
+    // Check for game over
+    if (this.health <= 0) {
+      this.scene.gameOver();
+    }
   }
 }

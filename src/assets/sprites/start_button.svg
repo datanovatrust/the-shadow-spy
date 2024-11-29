@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="80">
+  
+  <!-- Start Button -->
+  <rect x="0" y="0" width="200" height="80" rx="20" ry="20" fill="#FF10F0" />
+  <text x="100" y="50" font-size="32" text-anchor="middle" fill="#FFFFFF" font-family="Arial" alignment-baseline="middle">Start</text>
+
+</svg>
