@@ -623,6 +623,12 @@ export class GameScene extends Phaser.Scene {
       this.player = null;
     }
 
+    if (this.aiHelpers) {
+      this.aiHelpers.clear(true, true);
+      this.aiHelpers.destroy(true);
+      this.aiHelpers = null;
+    }    
+
     // Clean up emitters
     if (this.platformParticleEmitter) {
       this.platformParticleEmitter.destroy();
@@ -882,14 +888,14 @@ export class GameScene extends Phaser.Scene {
   reachFinish(player, finishPoint) {
     // Immediately remove all physics overlaps and colliders
     this.physics.world.colliders.destroy();
-
+  
     // Disable all input
     this.input.keyboard.enabled = false;
     player.disableInput = true;
-
+  
     // Stop all physics
     this.physics.pause();
-
+  
     // Stop all movements
     player.body.setVelocity(0);
     this.activeEnemies.children.iterate((enemy) => {
@@ -897,7 +903,7 @@ export class GameScene extends Phaser.Scene {
         enemy.body.setVelocity(0);
       }
     });
-
+  
     // Celebration effects
     const emitter = this.add.particles(player.x, player.y, 'particle', {
       speed: { min: -200, max: 200 },
@@ -908,12 +914,12 @@ export class GameScene extends Phaser.Scene {
       tint: [0x00FF00, 0xFF10F0, 0x00FFFF],
       quantity: 100,
     });
-
+  
     const levelCompleteText = this.add.text(player.x, player.y - 100, 'Level Completed!', {
       fontSize: '48px',
       fill: '#fff',
     }).setOrigin(0.5);
-
+  
     // Sequence the transition effects
     this.tweens.add({
       targets: levelCompleteText,
@@ -922,29 +928,31 @@ export class GameScene extends Phaser.Scene {
       duration: 2000,
       ease: 'Power1',
     });
-
+  
     // Camera effects
     this.cameras.main.flash(500, 255, 255, 255);
     this.cameras.main.zoomTo(2, 2000, 'Linear', true);
-
+  
     // Handle the transition
     this.time.delayedCall(2500, () => {
       // Stop particle emitter
       emitter.stop();
-
+  
       // Fade out
       this.cameras.main.fadeOut(1000, 0, 0, 0);
-
+  
       // Queue the scene transition
       this.time.delayedCall(1000, () => {
         // Clean up before transition
         this.cleanupScene();
-
-        // Start Level2Scene
-        this.scene.start('Level2Scene');
+  
+        // Start Level2Scene and pass playerData
+        this.scene.start('Level2Scene', {
+          playerData: this.player.getData(),
+        });
       });
     });
-  }
+  }  
 
   // Add new cleanup method to GameScene
   cleanupScene() {
@@ -1062,6 +1070,15 @@ export class GameScene extends Phaser.Scene {
     // Update player if it exists
     if (this.player && this.player.active) {
       this.player.update();
+    }
+
+    // Update AI helpers
+    if (this.aiHelpers) {
+      this.aiHelpers.getChildren().forEach((helper) => {
+        if (helper.active) {
+          helper.update();
+        }
+      });
     }
 
     // Spawn enemies when player is near

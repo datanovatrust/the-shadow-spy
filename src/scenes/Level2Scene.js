@@ -3,20 +3,27 @@
 import { Player } from '../characters/Player.js';
 import { FishEnemy } from '../enemies/FishEnemy.js';
 import { FederatedLearningMinigame } from './FederatedLearningMinigame.js';
+import { BossFightScene } from './BossFightScene.js';
 
 export class Level2Scene extends Phaser.Scene {
   constructor() {
     super('Level2Scene');
   }
 
+  // Add this method at the beginning of Level2Scene class
+  init(data) {
+    console.log('Received playerData:', data.playerData);
+    this.playerData = data.playerData || {};
+  }
+
   create() {
     // Reset physics world
     this.physics.world.resume();
     this.physics.world.enable = true;
-
+  
     // Set physics world bounds to match the level size
     this.physics.world.setBounds(0, 0, 8000, 600);
-
+  
     // Initialize groups
     this.activeEnemies = this.physics.add.group();
     this.platforms = this.physics.add.staticGroup();
@@ -25,36 +32,39 @@ export class Level2Scene extends Phaser.Scene {
       immovable: true,
     });
     this.terminals = this.physics.add.staticGroup();
-
+  
     // Create background layers
     this.createBackground();
-
+  
     // Create platforms with variegated terrain
     this.createPlatforms();
-
-    // Create the player
+  
+    // Create the player with existing data
     this.player = new Player(this, 100, 450);
+    if (this.playerData) {
+      Object.assign(this.player, this.playerData); // Apply the saved data to the player
+    }
     this.player.scene = this;
-
+  
     // Set up colliders
     this.setupColliders();
-
+  
     // Create enemies
     this.createEnemies();
-
+  
     // Create collectibles and power-ups
     this.createCollectibles();
-
+  
     // Create terminals for the minigame
     this.createTerminals();
-
+  
     // Set up camera
     this.cameras.main.setBounds(0, 0, 8000, 600);
     this.cameras.main.startFollow(this.player, true, 0.05, 0.05);
-
+  
     // HUD
     this.createHUD();
-
+  
     // Input for menu
     this.input.keyboard.on('keydown-M', () => {
       this.scene.pause('Level2Scene');
@@ -64,9 +74,12 @@ export class Level2Scene extends Phaser.Scene {
         this.scene.launch('MenuScene');
       }
     });
-
+  
     // Add the minigame scene
     this.scene.add('FederatedLearningMinigame', FederatedLearningMinigame);
+  
+    // Add a trigger point for the boss fight
+    this.createBossTrigger();
   }
 
   setupColliders() {
@@ -135,6 +148,17 @@ export class Level2Scene extends Phaser.Scene {
         this.player,
         this.terminals,
         this.handleTerminalOverlap,
+        null,
+        this
+      );
+    }
+
+    // Overlaps with boss trigger
+    if (this.player && this.bossTrigger) {
+      this.physics.add.overlap(
+        this.player,
+        this.bossTrigger,
+        this.transitionToBossFight,
         null,
         this
       );
@@ -299,7 +323,11 @@ export class Level2Scene extends Phaser.Scene {
     ];
 
     terminalPositions.forEach((pos) => {
-      const terminal = this.terminals.create(pos.x, pos.y - 32, 'terminal_sprite');
+      const terminal = this.terminals.create(
+        pos.x,
+        pos.y - 32,
+        'terminal_sprite'
+      );
       terminal.setInteractive();
       terminal.minigameCompleted = false;
       terminal.id = pos.id; // Assign unique ID
@@ -310,6 +338,25 @@ export class Level2Scene extends Phaser.Scene {
         }
       });
     });
+  }
+
+  createBossTrigger() {
+    // Create a trigger for the boss fight
+    this.bossTrigger = this.physics.add.staticImage(
+      7800,
+      500,
+      'finishFlag'
+    );
+    this.bossTrigger.setVisible(false); // Hide the trigger if you don't want it to be seen
+
+    // Add overlap in setupColliders
+    this.physics.add.overlap(
+      this.player,
+      this.bossTrigger,
+      this.transitionToBossFight,
+      null,
+      this
+    );
   }
 
   startFederatedLearningMinigame(terminal) {
@@ -391,6 +438,38 @@ export class Level2Scene extends Phaser.Scene {
       },
     });
   }
+
+  homomorphicEncryptionBlast(x, y) {
+    const radius = 200;
+  
+    // Iterate over active enemies and apply damage if within radius
+    this.activeEnemies.children.iterate((enemy) => {
+      if (!enemy || !enemy.active) {
+        return; // Skip if enemy is undefined or inactive
+      }
+      const distance = Phaser.Math.Distance.Between(x, y, enemy.x, enemy.y);
+      if (distance <= radius) {
+        enemy.takeDamage(3, {
+          x: (enemy.x - x) * 2,
+          y: -100,
+        });
+        if (enemy.health <= 0) {
+          enemy.destroy();
+        }
+      }
+    });
+  
+    // Visual effect for the blast
+    const blast = this.add.circle(x, y, radius, 0x00ff00, 0.3);
+    this.tweens.add({
+      targets: blast,
+      alpha: 0,
+      duration: 500,
+      onComplete: () => {
+        blast.destroy();
+      },
+    });
+  }  
 
   showMessage(text, x, y) {
     const message = this.add.text(x, y, text, {
@@ -486,7 +565,12 @@ export class Level2Scene extends Phaser.Scene {
   }
 
   handleWeaponEnemyCollision(weapon, enemy) {
-    if (!weapon.active || !enemy.active || !weapon.body || !enemy.body) {
+    if (
+      !weapon.active ||
+      !enemy.active ||
+      !weapon.body ||
+      !enemy.body
+    ) {
       return;
     }
 
@@ -503,7 +587,12 @@ export class Level2Scene extends Phaser.Scene {
   }
 
   handleProjectileEnemyCollision(projectile, enemy) {
-    if (!projectile.active || !enemy.active || !projectile.body || !enemy.body) {
+    if (
+      !projectile.active ||
+      !enemy.active ||
+      !projectile.body ||
+      !enemy.body
+    ) {
       return;
     }
 
@@ -520,7 +609,12 @@ export class Level2Scene extends Phaser.Scene {
   }
 
   handlePlayerEnemyCollision(player, enemy) {
-    if (!player.active || !enemy.active || !player.body || !enemy.body) {
+    if (
+      !player.active ||
+      !enemy.active ||
+      !player.body ||
+      !enemy.body
+    ) {
       return;
     }
 
@@ -539,7 +633,9 @@ export class Level2Scene extends Phaser.Scene {
     this.showMessage('Press E to interact', terminal.x, terminal.y - 50);
 
     // Listen for 'E' key
-    this.eKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+    this.eKey = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.E
+    );
 
     this.input.keyboard.on('keydown-E', () => {
       if (
@@ -572,15 +668,18 @@ export class Level2Scene extends Phaser.Scene {
 
   cleanupScene() {
     // Destroy physics groups with null checks
-    ['activeEnemies', 'platforms', 'healthPacks', 'terminals'].forEach(
-      (group) => {
-        if (this[group]) {
-          this[group].clear(true, true); // Clear and destroy children
-          this[group].destroy(true);
-          this[group] = null;
-        }
+    [
+      'activeEnemies',
+      'platforms',
+      'healthPacks',
+      'terminals',
+    ].forEach((group) => {
+      if (this[group]) {
+        this[group].clear(true, true); // Clear and destroy children
+        this[group].destroy(true);
+        this[group] = null;
       }
-    );
+    });
 
     // Destroy player
     if (this.player) {
@@ -594,6 +693,23 @@ export class Level2Scene extends Phaser.Scene {
 
     // Clear input
     this.input.keyboard.removeAllKeys();
+  }
+
+  transitionToBossFight(player, trigger) {
+    // Stop all movement
+    this.player.setVelocity(0);
+    this.player.disableInput = true;
+
+    // Fade out effect
+    this.cameras.main.fadeOut(1000, 0, 0, 0);
+
+    // After fade out, start the boss fight scene
+    this.time.delayedCall(1000, () => {
+      // Pass player data if needed
+      this.scene.start('BossFightScene', {
+        playerData: this.player.getData(),
+      });
+    });
   }
 
   update() {

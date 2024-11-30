@@ -6,12 +6,21 @@ import { MenuScene } from './scenes/MenuScene.js';
 import { GameScene } from './scenes/GameScene.js';
 import { PauseScene } from './scenes/PauseScene.js';
 import { Level2Scene } from './scenes/Level2Scene.js';
+import { BossFightScene } from './scenes/BossFightScene.js';
 
 const config = {
   type: Phaser.AUTO,
   width: 800,
   height: 600,
-  scene: [BootScene, PreloadScene, MenuScene, GameScene, PauseScene, Level2Scene],
+  scene: [
+    BootScene,
+    PreloadScene,
+    MenuScene,
+    GameScene,
+    PauseScene,
+    Level2Scene,
+    BossFightScene,
+  ],
   physics: {
     default: 'arcade',
     arcade: {

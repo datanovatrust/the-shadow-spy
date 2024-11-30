@@ -16,6 +16,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.isAttacking = false;
     this.petSkills = {};
     this.activePetEffects = {};
+    this.petCooldowns = {
+      DP: 0,
+      FL: 0,
+      HE: 0,
+      PE: 0,
+    };
 
     // Weapon Level
     this.weaponLevel = 1;
@@ -28,7 +34,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     // Input keys
     this.cursors = scene.input.keyboard.createCursorKeys();
-    this.attackKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE); // Attack key assigned to 'SPACE'
+    this.attackKey = scene.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE
+    ); // Attack key assigned to 'SPACE'
     this.jumpKey = this.cursors.up; // Up arrow for jumping
 
     // PET activation keys
@@ -99,25 +107,40 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.setVelocityY(-330);
         this.jumpCount++;
         this.canDoubleJump = false;
-
-        // Optional: Add a visual or sound effect for double jump
       }
     }
 
     // Attacking
-    if (Phaser.Input.Keyboard.JustDown(this.attackKey) && !this.isAttacking) {
+    if (
+      Phaser.Input.Keyboard.JustDown(this.attackKey) &&
+      !this.isAttacking
+    ) {
       this.attack();
     }
 
     // Update weapon position
     if (this.isAttacking) {
-      this.weapon.x = this.x + (this.direction === 'left' ? -20 : 20);
+      this.weapon.x =
+        this.x + (this.direction === 'left' ? -20 : 20);
       this.weapon.y = this.y;
+    }
+
+    // Reduce PET cooldowns
+    for (const skill in this.petCooldowns) {
+      if (this.petCooldowns[skill] > 0) {
+        this.petCooldowns[skill] -= this.scene.game.loop.delta;
+        if (this.petCooldowns[skill] < 0) {
+          this.petCooldowns[skill] = 0;
+        }
+      }
     }
 
     // PET activation
     for (const skill in this.petKeys) {
-      if (Phaser.Input.Keyboard.JustDown(this.petKeys[skill]) && this.petSkills[skill]) {
+      if (
+        Phaser.Input.Keyboard.JustDown(this.petKeys[skill]) &&
+        this.petSkills[skill]
+      ) {
         this.activatePetSkill(skill);
       }
     }
@@ -130,7 +153,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.weapon.body.checkCollision.none = false;
 
     // Set weapon position
-    this.weapon.x = this.x + (this.direction === 'left' ? -20 : 20);
+    this.weapon.x =
+      this.x + (this.direction === 'left' ? -20 : 20);
     this.weapon.y = this.y;
 
     // Set up the overlap dynamically
@@ -161,7 +185,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   fireProjectile() {
-    const projectile = this.projectiles.create(this.x, this.y, 'projectile');
+    const projectile = this.projectiles.create(
+      this.x,
+      this.y,
+      'projectile'
+    );
     projectile.setScale(0.5 + 0.1 * this.weaponLevel);
     projectile.body.allowGravity = false;
     projectile.body.setCircle(8 + 2 * this.weaponLevel);
@@ -206,10 +234,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   activatePetSkill(skill) {
-    if (this.activePetEffects[skill]) {
-      // Skill is already active
+    if (this.activePetEffects[skill] || this.petCooldowns[skill] > 0) {
+      // Skill is already active or on cooldown
       return;
     }
+
     switch (skill) {
       case 'DP':
         // Temporarily reduce epsilon gain
@@ -225,7 +254,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       case 'FL':
         // Summon AI helper
         this.activePetEffects.FL = true;
-        this.spawnAIHelper();
+        this.spawnAIHelpers(5);
         break;
       case 'HE':
         // Area-of-effect attack
@@ -245,38 +274,230 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         });
         break;
     }
+
+    // Set cooldown
+    const cooldownDuration = 15000; // 15 seconds cooldown
+    this.petCooldowns[skill] = cooldownDuration;
+
     // Update PET HUD to show active effect
     this.scene.updatePetHUD();
   }
 
-  spawnAIHelper() {
-    const helper = this.scene.physics.add.sprite(this.x + 50, this.y, 'ai_helper');
-    helper.setTint(0x32cd32); // Green tint to distinguish
-    helper.body.allowGravity = false;
+  homomorphicEncryptionBlast() {
+    const x = this.x;
+    const y = this.y;
+    const radius = 200;
 
-    // AI helper behavior
-    helper.update = () => {
-      helper.x = this.x + 50;
-      helper.y = this.y;
-    };
+    // Access the current scene's activeEnemies group
+    const enemies = this.scene.activeEnemies;
 
-    // Helper attacks enemies
-    this.scene.physics.add.overlap(
-      helper,
-      this.scene.activeEnemies,
-      (helper, enemy) => {
-        enemy.takeDamage(1, { x: 0, y: 0 });
+    enemies.children.iterate((enemy) => {
+      if (!enemy || !enemy.active) {
+        return; // Skip if enemy is undefined or inactive
+      }
+      const distance = Phaser.Math.Distance.Between(x, y, enemy.x, enemy.y);
+      if (distance <= radius) {
+        enemy.takeDamage(3, {
+          x: (enemy.x - x) * 2,
+          y: -100,
+        });
         if (enemy.health <= 0) {
           enemy.destroy();
         }
       }
-    );
+    });
 
-    // Remove helper after some time
+    // Visual effect for the blast
+    const blast = this.scene.add.circle(x, y, radius, 0x00ff00, 0.3);
+    this.scene.tweens.add({
+      targets: blast,
+      alpha: 0,
+      duration: 500,
+      onComplete: () => {
+        blast.destroy();
+      },
+    });
+  }
+
+  spawnAIHelpers(count) {
+    for (let i = 0; i < count; i++) {
+      const helper = this.scene.physics.add.sprite(
+        this.x + Phaser.Math.Between(-50, 50),
+        this.y - 50, // Spawn slightly above the player
+        'ai_helper'
+      );
+      helper.setTint(0x32cd32); // Green tint to distinguish
+      helper.body.allowGravity = true;
+      helper.setCollideWorldBounds(true);
+      helper.health = 5; // Increased health
+      helper.speed = 150; // Increased speed
+      helper.jumpStrength = -400; // Increased jump height
+      helper.attackCooldown = 0; // Initialize attack cooldown
+  
+      // Ensure aiHelpers group exists
+      if (!this.scene.aiHelpers) {
+        this.scene.aiHelpers = this.scene.physics.add.group({
+          collideWorldBounds: true,
+        });
+      }
+      this.scene.aiHelpers.add(helper);
+  
+      // Ensure physics body size matches the sprite
+      helper.body.setSize(helper.width, helper.height);
+      helper.body.setOffset(0, 0);
+  
+      // Define the attack method for the helper
+      helper.attack = () => {
+        if (this.scene.time.now > helper.attackCooldown) {
+          // Create a projectile
+          const projectile = this.scene.physics.add.sprite(helper.x, helper.y, 'ai_projectile');
+          projectile.body.allowGravity = false;
+          projectile.setVelocityX(helper.flipX ? -300 : 300);
+  
+          // Overlap with target
+          this.scene.physics.add.overlap(projectile, helper.target, (proj, targ) => {
+            targ.takeDamage(1);
+            proj.destroy();
+          });
+  
+          // Set cooldown
+          helper.attackCooldown = this.scene.time.now + 1000; // 1-second cooldown
+        }
+      };
+  
+      // AI helper behavior
+      helper.update = () => {
+        let target = null;
+  
+        // Target acquisition
+        if (this.scene.boss && this.scene.boss.active) {
+          target = this.scene.boss;
+        } else if (this.scene.activeEnemies && this.scene.activeEnemies.getChildren().length > 0) {
+          // Prioritize enemies attacking the player
+          const enemies = this.scene.activeEnemies.getChildren();
+          const attackingEnemies = enemies.filter(enemy => enemy.isAttackingPlayer);
+          if (attackingEnemies.length > 0) {
+            // Find the closest attacking enemy
+            target = attackingEnemies.reduce((closest, enemy) => {
+              const distance = Phaser.Math.Distance.Between(helper.x, helper.y, enemy.x, enemy.y);
+              if (!closest || distance < closest.distance) {
+                return { enemy, distance };
+              }
+              return closest;
+            }, null)?.enemy;
+          } else {
+            // Find the closest enemy
+            target = enemies.reduce((closest, enemy) => {
+              const distance = Phaser.Math.Distance.Between(helper.x, helper.y, enemy.x, enemy.y);
+              if (!closest || distance < closest.distance) {
+                return { enemy, distance };
+              }
+              return closest;
+            }, null)?.enemy;
+          }
+        }
+  
+        helper.target = target; // Store the target for use in attack
+  
+        if (target) {
+          // Calculate direction towards target
+          const directionX = target.x < helper.x ? -1 : 1;
+          helper.setVelocityX(directionX * helper.speed);
+          helper.setFlipX(directionX < 0);
+  
+          // Vertical movement
+          const deltaY = target.y - helper.y;
+          if (deltaY < -20 && helper.body.blocked.down) {
+            // Target is above, attempt to jump
+            helper.setVelocityY(helper.jumpStrength);
+          }
+  
+          // Jump over obstacles
+          if ((helper.body.blocked.right && directionX > 0) || (helper.body.blocked.left && directionX < 0)) {
+            if (helper.body.blocked.down) {
+              helper.setVelocityY(helper.jumpStrength);
+            }
+          }
+  
+          // Attack if within range
+          const distanceToTarget = Phaser.Math.Distance.Between(helper.x, helper.y, target.x, target.y);
+          if (distanceToTarget < 300) {
+            helper.attack();
+          }
+        } else {
+          // No target found, idle
+          helper.setVelocityX(0);
+        }
+  
+        // Play run animation if moving
+        if (helper.body.velocity.x !== 0) {
+          helper.anims.play('helper_run', true);
+        } else {
+          helper.anims.stop();
+          helper.setFrame(0);
+        }
+      };
+  
+      // Helper takes damage from enemy projectiles
+      if (this.scene.enemyProjectiles) {
+        this.scene.physics.add.overlap(
+          helper,
+          this.scene.enemyProjectiles,
+          (helper, projectile) => {
+            projectile.destroy();
+            helper.health -= 1;
+            helper.setTint(0xff0000);
+            this.scene.time.delayedCall(200, () => {
+              helper.clearTint();
+            });
+            if (helper.health <= 0) {
+              helper.destroy();
+            }
+          }
+        );
+      }
+  
+      // Helper collides with enemies
+      if (this.scene.activeEnemies) {
+        this.scene.physics.add.overlap(
+          helper,
+          this.scene.activeEnemies,
+          (helper, enemy) => {
+            enemy.takeDamage(1, { x: 0, y: -100 });
+            if (enemy.health <= 0) {
+              enemy.destroy();
+            }
+          }
+        );
+      }
+  
+      // Helper collides with boss
+      if (this.scene.boss && this.scene.boss.active) {
+        this.scene.physics.add.overlap(
+          helper,
+          this.scene.boss,
+          (helper, boss) => {
+            boss.takeDamage(1);
+            boss.setVelocityX((boss.x - helper.x) * 2);
+            boss.setTint(0xff0000);
+            this.scene.time.delayedCall(200, () => {
+              boss.clearTint();
+            });
+            if (boss.health <= 0) {
+              this.scene.bossDefeated();
+            }
+          }
+        );
+      }
+    }
+  
+    // Remove helpers after some time
     this.scene.time.addEvent({
-      delay: 10000, // Helper lasts 10 seconds
+      delay: 10000, // Helpers last 10 seconds
       callback: () => {
-        helper.destroy();
+        if (this.scene.aiHelpers) {
+          this.scene.aiHelpers.clear(true, true);
+        }
         this.activePetEffects.FL = false;
         this.scene.updatePetHUD();
       },
@@ -309,5 +530,19 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     if (this.health <= 0) {
       this.scene.gameOver();
     }
+  }
+
+  getData() {
+    return {
+      epsilon: this.epsilon,
+      health: this.health,
+      attackPower: this.attackPower,
+      direction: this.direction,
+      weaponLevel: this.weaponLevel,
+      petSkills: { ...this.petSkills },
+      activePetEffects: { ...this.activePetEffects },
+      petCooldowns: { ...this.petCooldowns },
+      // Add any other properties that need to be preserved
+    };
   }
 }

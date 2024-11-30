@@ -67,7 +67,10 @@ export class PreloadScene extends Phaser.Scene {
     // Level-specific assets
     this.load.image('sailboat', 'src/assets/sprites/sailboat.svg');
     this.load.image('terminal_sprite', 'src/assets/sprites/terminal_sprite.svg');
+    
+    // Load AI Helper and Projectile
     this.load.image('ai_helper', 'src/assets/sprites/ai_helper.svg');
+    this.load.image('ai_projectile', 'src/assets/sprites/ai_projectile.svg');
 
     // Menu assets
     this.load.image('menu_background', 'src/assets/sprites/menu_background.svg');
@@ -78,6 +81,14 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('platform_glow', 'src/assets/sprites/platform_glow.svg');
     this.load.image('neon_trail', 'src/assets/sprites/neon_trail.svg');
     this.load.image('city_light', 'src/assets/sprites/city_light.svg');
+
+    // New assets for the boss fight
+    this.load.image('noise_shield', 'src/assets/sprites/noise_shield.svg');
+    this.load.image('gaussian_wave', 'src/assets/sprites/gaussian_wave.svg');
+
+    this.load.svg('epsilon', 'src/assets/sprites/epsilon.svg');
+    this.load.svg('delta', 'src/assets/sprites/delta.svg');
+    this.load.svg('sigma', 'src/assets/sprites/sigma.svg');
   }
 
   create() {

@@ -967,3 +967,59 @@ generateSVG('dataPoint.svg', 16, 16, `
   <!-- Data Point -->
   <circle cx="8" cy="8" r="8" fill="#FFD700" />
 `);
+
+generateSVG('noise_shield.svg', 64, 64, `
+  <!-- Noise Shield Effect -->
+  <defs>
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" />
+      <feDisplacementMap in="SourceGraphic" scale="10" />
+    </filter>
+  </defs>
+  <circle cx="32" cy="32" r="30" fill="#00CED1" opacity="0.5" filter="url(#noise)" />
+`);
+
+// Generate Gaussian Wave SVG
+generateSVG('gaussian_wave.svg', 800, 200, `
+  <!-- Gaussian Wave -->
+  <defs>
+    <linearGradient id="gaussianGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00CED1; stop-opacity:0"/>
+      <stop offset="50%" style="stop-color:#00CED1; stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#00CED1; stop-opacity:0"/>
+    </linearGradient>
+  </defs>
+  <path d="M0,100 ${[...Array(801).keys()].map(x => {
+    const y = 100 - 80 * Math.exp(-Math.pow((x - 400) / 100, 2));
+    return `L${x},${y}`;
+  }).join(' ')}" fill="none" stroke="url(#gaussianGradient)" stroke-width="2"/>
+`);
+
+// Generate epsilon SVG
+generateSVG('epsilon.svg', 32, 32, `
+  <text x="16" y="24" font-size="24" text-anchor="middle" fill="#000">&#949;</text>
+`);
+
+// Generate delta SVG
+generateSVG('delta.svg', 32, 32, `
+  <text x="16" y="24" font-size="24" text-anchor="middle" fill="#000">&#948;</text>
+`);
+
+// Generate sigma SVG
+generateSVG('sigma.svg', 32, 32, `
+  <text x="16" y="24" font-size="24" text-anchor="middle" fill="#000">&#963;</text>
+`);
+
+// Generate HUD PET Slot SVG
+generateSVG('hud_petSlot.svg', 40, 40, `
+  <!-- PET Slot Background -->
+  <rect x="0" y="0" width="40" height="40" fill="#333"
+        stroke="#FFF" stroke-width="2" rx="5" ry="5" />
+`);
+
+generateSVG('ai_projectile.svg', 16, 16, `
+  <!-- AI Helper Projectile -->
+  <circle cx="8" cy="8" r="6" fill="#FFD700" stroke="#FFA500" stroke-width="2" />
+  <!-- Glow Effect -->
+  <circle cx="8" cy="8" r="8" fill="none" stroke="#FFFF00" stroke-width="1" opacity="0.5" />
+`);
