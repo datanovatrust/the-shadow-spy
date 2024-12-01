@@ -1023,3 +1023,45 @@ generateSVG('ai_projectile.svg', 16, 16, `
   <!-- Glow Effect -->
   <circle cx="8" cy="8" r="8" fill="none" stroke="#FFFF00" stroke-width="1" opacity="0.5" />
 `);
+
+// Generate Federated Learning Boss SVG
+generateSVG('fl_boss.svg', 64, 64, `
+  <!-- Federated Learning Boss -->
+  <!-- Outer Circle (Server) -->
+  <circle cx="32" cy="32" r="30" fill="#00008B" stroke="#1E90FF" stroke-width="4" />
+  <!-- Inner Gear -->
+  <path d="M32,16 L36,24 L44,28 L36,32 L32,40 L28,32 L20,28 L28,24 Z" fill="#1E90FF" />
+  <!-- Eye -->
+  <circle cx="32" cy="32" r="6" fill="#FFFFFF" />
+  <circle cx="32" cy="32" r="3" fill="#000000" />
+`);
+
+// Generate Federated Learning Minion SVG
+generateSVG('fl_minion.svg', 32, 32, `
+  <!-- Federated Learning Minion -->
+  <!-- Body (Client Device) -->
+  <rect x="6" y="6" width="20" height="20" fill="#228B22" rx="4" ry="4" stroke="#32CD32" stroke-width="2" />
+  <!-- Screen -->
+  <rect x="10" y="10" width="12" height="12" fill="#ADFF2F" />
+  <!-- Antenna -->
+  <line x1="16" y1="6" x2="16" y2="0" stroke="#32CD32" stroke-width="2" />
+  <circle cx="16" cy="0" r="2" fill="#32CD32" />
+`);
+
+// Generate boss projectile SVG
+generateSVG('boss_projectile.svg', 16, 16, `
+  <!-- Boss Projectile -->
+  <circle cx="8" cy="8" r="6" fill="#FF4500" stroke="#FFD700" stroke-width="2" />
+  <!-- Glow Effect -->
+  <circle cx="8" cy="8" r="8" fill="none" stroke="#FFA500" stroke-width="1" opacity="0.5" />
+`);
+
+// Generate laser charge frames
+for (let i = 1; i <= 4; i++) {
+  const opacity = i * 0.25; // Gradually increasing opacity
+  generateSVG(`laser_charge_frame${i}.svg`, 64, 64, `
+    <!-- Laser Charge Animation Frame ${i} -->
+    <circle cx="32" cy="32" r="30" fill="none" stroke="#FF0000" stroke-width="4" opacity="${opacity}" />
+    <circle cx="32" cy="32" r="${10 + i * 5}" fill="#FF0000" opacity="${opacity}" />
+  `);
+}

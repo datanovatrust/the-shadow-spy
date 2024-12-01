@@ -7,6 +7,7 @@ import { GameScene } from './scenes/GameScene.js';
 import { PauseScene } from './scenes/PauseScene.js';
 import { Level2Scene } from './scenes/Level2Scene.js';
 import { BossFightScene } from './scenes/BossFightScene.js';
+import { FederatedLearningBossFightScene } from './scenes/FederatedLearningBossFightScene.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -19,6 +20,7 @@ const config = {
     GameScene,
     PauseScene,
     Level2Scene,
+    FederatedLearningBossFightScene,
     BossFightScene,
   ],
   physics: {

@@ -67,7 +67,7 @@ export class PreloadScene extends Phaser.Scene {
     // Level-specific assets
     this.load.image('sailboat', 'src/assets/sprites/sailboat.svg');
     this.load.image('terminal_sprite', 'src/assets/sprites/terminal_sprite.svg');
-    
+
     // Load AI Helper and Projectile
     this.load.image('ai_helper', 'src/assets/sprites/ai_helper.svg');
     this.load.image('ai_projectile', 'src/assets/sprites/ai_projectile.svg');
@@ -89,6 +89,21 @@ export class PreloadScene extends Phaser.Scene {
     this.load.svg('epsilon', 'src/assets/sprites/epsilon.svg');
     this.load.svg('delta', 'src/assets/sprites/delta.svg');
     this.load.svg('sigma', 'src/assets/sprites/sigma.svg');
+
+    // Load new assets for Federated Learning Boss Fight
+    this.load.image('fl_boss', 'src/assets/sprites/fl_boss.svg');
+    this.load.image('fl_minion', 'src/assets/sprites/fl_minion.svg');
+
+    // Load boss projectile
+    this.load.image('boss_projectile', 'src/assets/sprites/boss_projectile.svg');
+
+    // Load laser charge frames
+    for (let i = 1; i <= 4; i++) {
+        this.load.image(
+            `laser_charge_frame${i}`,
+            `src/assets/sprites/laser_charge_frame${i}.svg`
+        );
+    }
   }
 
   create() {

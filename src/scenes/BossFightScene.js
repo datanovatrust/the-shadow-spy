@@ -435,32 +435,31 @@ export class BossFightScene extends Phaser.Scene {
         if (this.boss.attackEvent) {
             this.boss.attackEvent.remove(false);
         }
-
+    
         // Destroy existing boss projectiles
         this.boss.projectiles.clear(true, true);
-
+    
         // Play defeat animation or effects
         this.boss.setTint(0x808080);
         this.boss.setVelocity(0, 0);
         this.boss.body.enable = false;
         this.boss.active = false;
-
+    
         // Show victory text
         const victoryText = this.add.text(
             this.cameras.main.worldView.x + this.cameras.main.width / 2,
             this.cameras.main.worldView.y + this.cameras.main.height / 2,
-            'You Win!',
+            'Boss Defeated!',
             {
                 fontSize: '64px',
                 fill: '#00ff00',
             }
         );
         victoryText.setOrigin(0.5);
-
-        // Transition to next level or end game
+    
+        // Transition to the Federated Learning Boss Fight Scene
         this.time.delayedCall(2000, () => {
-            // Transition to the next scene or end game
-            this.scene.start('GameOverScene', {
+            this.scene.start('FederatedLearningBossFightScene', {
                 playerData: this.player.getData(),
             });
         });

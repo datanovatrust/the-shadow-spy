@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+  
+  <!-- Federated Learning Boss -->
+  <!-- Outer Circle (Server) -->
+  <circle cx="32" cy="32" r="30" fill="#00008B" stroke="#1E90FF" stroke-width="4" />
+  <!-- Inner Gear -->
+  <path d="M32,16 L36,24 L44,28 L36,32 L32,40 L28,32 L20,28 L28,24 Z" fill="#1E90FF" />
+  <!-- Eye -->
+  <circle cx="32" cy="32" r="6" fill="#FFFFFF" />
+  <circle cx="32" cy="32" r="3" fill="#000000" />
+
+</svg>
