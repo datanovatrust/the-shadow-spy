@@ -8,6 +8,7 @@ import { PauseScene } from './scenes/PauseScene.js';
 import { Level2Scene } from './scenes/Level2Scene.js';
 import { BossFightScene } from './scenes/BossFightScene.js';
 import { FederatedLearningBossFightScene } from './scenes/FederatedLearningBossFightScene.js';
+import { HomomorphicEncryptionBossFightScene } from './scenes/HomomorphicEncryptionBossFightScene.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -22,6 +23,7 @@ const config = {
     Level2Scene,
     FederatedLearningBossFightScene,
     BossFightScene,
+    HomomorphicEncryptionBossFightScene,
   ],
   physics: {
     default: 'arcade',

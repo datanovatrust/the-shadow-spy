@@ -16,17 +16,10 @@ export class GameScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, 8000, 600);
 
     // Create layered cyberpunk background
-    this.backgroundSky = this.add.tileSprite(4000, 300, 8000, 600, 'background_sky')
-      .setScrollFactor(0);
-
-    this.backgroundBuildingsFar = this.add.tileSprite(4000, 300, 8000, 600, 'background_buildings_far')
-      .setScrollFactor(0.1);
-
-    this.backgroundPlatforms = this.add.tileSprite(4000, 300, 8000, 600, 'background_platforms')
-      .setScrollFactor(0.3);
-
-    this.backgroundForeground = this.add.tileSprite(4000, 300, 8000, 600, 'background_foreground')
-      .setScrollFactor(0.5);
+    this.backgroundSky = this.add.tileSprite(4000, 300, 8000, 600, 'background_sky').setScrollFactor(0);
+    this.backgroundBuildingsFar = this.add.tileSprite(4000, 300, 8000, 600, 'background_buildings_far').setScrollFactor(0.1);
+    this.backgroundPlatforms = this.add.tileSprite(4000, 300, 8000, 600, 'background_platforms').setScrollFactor(0.3);
+    this.backgroundForeground = this.add.tileSprite(4000, 300, 8000, 600, 'background_foreground').setScrollFactor(0.5);
 
     // Add vertical light beam effects
     this.createLightBeams();
@@ -36,9 +29,7 @@ export class GameScene extends Phaser.Scene {
 
     // Ground platforms across the level without individual tweens
     for (let i = 0; i < 40; i++) {
-      this.platforms.create(i * 200 + 100, 584, 'ground')
-        .setScale(2)
-        .refreshBody();
+      this.platforms.create(i * 200 + 100, 584, 'ground').setScale(2).refreshBody();
     }
 
     // Additional platforms for jumping (Varied terrain)
@@ -72,24 +63,49 @@ export class GameScene extends Phaser.Scene {
       frequency: -1, // Emit manually
     });
 
-    // Collide the player with the platforms
-    this.physics.add.collider(this.player, this.platforms, (player, platform) => {
+    // Collide the player with the platforms and store the colliders
+    this.playerPlatformCollider = this.physics.add.collider(this.player, this.platforms, (player, platform) => {
       // Emit particles when player lands on platform
       if (player.body.touching.down) {
         this.platformParticleEmitter.emitParticleAt(player.x, player.y + 16, 5);
       }
     });
-    this.physics.add.collider(this.player, this.movingPlatforms);
+
+    this.playerMovingPlatformCollider = this.physics.add.collider(this.player, this.movingPlatforms);
 
     // Create enemies group
     this.createEnemies();
 
-    // Set up colliders and overlaps with activeEnemies
-    this.physics.add.collider(this.activeEnemies, this.platforms);
-    this.physics.add.collider(this.activeEnemies, this.movingPlatforms);
-    this.physics.add.overlap(this.player.weapon, this.activeEnemies, this.handleWeaponEnemyCollision, null, this);
-    this.physics.add.overlap(this.player, this.activeEnemies, this.handlePlayerEnemyCollision, null, this);
-    this.physics.add.overlap(this.player.projectiles, this.activeEnemies, this.handleProjectileEnemyCollision, null, this);
+    // Initialize active enemies group
+    this.activeEnemies = this.physics.add.group();
+
+    // Set up colliders and overlaps with activeEnemies and store references
+    this.activeEnemiesPlatformCollider = this.physics.add.collider(this.activeEnemies, this.platforms);
+    this.activeEnemiesMovingPlatformCollider = this.physics.add.collider(this.activeEnemies, this.movingPlatforms);
+
+    this.playerWeaponActiveEnemiesOverlap = this.physics.add.overlap(
+      this.player.weapon,
+      this.activeEnemies,
+      this.handleWeaponEnemyCollision,
+      null,
+      this
+    );
+
+    this.playerActiveEnemiesOverlap = this.physics.add.overlap(
+      this.player,
+      this.activeEnemies,
+      this.handlePlayerEnemyCollision,
+      null,
+      this
+    );
+
+    this.playerProjectilesActiveEnemiesOverlap = this.physics.add.overlap(
+      this.player.projectiles,
+      this.activeEnemies,
+      this.handleProjectileEnemyCollision,
+      null,
+      this
+    );
 
     // Camera follow with smooth transition
     this.cameras.main.setBounds(0, 0, 8000, 600);
@@ -113,21 +129,20 @@ export class GameScene extends Phaser.Scene {
       .setTint(0xFF10F0)
       .setBlendMode(Phaser.BlendModes.ADD);
 
-    this.physics.add.overlap(this.player, this.finishPoint, this.reachFinish, null, this);
+    // Overlap between player and finish point
+    this.playerFinishPointOverlap = this.physics.add.overlap(
+      this.player,
+      this.finishPoint,
+      this.reachFinish,
+      null,
+      this
+    );
 
     // Create collectibles and power-ups
     this.createDataBreaches();
     this.createHealthPacks();
     this.createPetSkills();
     this.createWeaponPowerUps();
-
-    // // Define the 'idle' animation for the player
-    // this.anims.create({
-    //   key: 'idle',
-    //   frames: this.anims.generateFrameNumbers('player', { start: 0, end: 3 }), // Adjust frame numbers as per your sprite sheet
-    //   frameRate: 10,
-    //   repeat: -1
-    // });
 
     // Create HUD
     this.createHUD();
@@ -136,13 +151,27 @@ export class GameScene extends Phaser.Scene {
     this.enemyProjectiles = this.physics.add.group();
 
     // Overlaps for projectiles
-    this.physics.add.overlap(this.player, this.enemyProjectiles, this.handleProjectileCollision, null, this);
-    this.physics.add.overlap(this.player.projectiles, this.activeEnemies, this.handleProjectileEnemyCollision, null, this);
+    this.playerEnemyProjectilesOverlap = this.physics.add.overlap(
+      this.player,
+      this.enemyProjectiles,
+      this.handleProjectileCollision,
+      null,
+      this
+    );
+
+    this.playerProjectilesActiveEnemiesOverlap = this.physics.add.overlap(
+      this.player.projectiles,
+      this.activeEnemies,
+      this.handleProjectileEnemyCollision,
+      null,
+      this
+    );
 
     // Boss spawn threshold
     this.nextBossEpsilonThreshold = 100;
 
-
+    // Create the secret portal
+    this.createSecretPortal();
 
     // Initialize city lights array and create the lights
     this.cityLights = [];
@@ -160,6 +189,56 @@ export class GameScene extends Phaser.Scene {
       } else {
         this.scene.launch('MenuScene');
       }
+    });
+  }
+
+  createSecretPortal() {
+    // Change the portal's position to avoid overlapping with the PET Skill
+    this.secretPortal = this.physics.add.sprite(2700, 350, 'secret_portal');
+    this.secretPortal.setScale(1);
+    this.secretPortal.setImmovable(true);
+    this.secretPortal.body.allowGravity = false;
+
+    // Add a glowing animation or effect if desired
+    this.tweens.add({
+      targets: this.secretPortal,
+      alpha: { from: 0.7, to: 1 },
+      duration: 1000,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    });
+
+    // Store the overlap reference
+    this.playerSecretPortalOverlap = this.physics.add.overlap(
+      this.player,
+      this.secretPortal,
+      this.enterSecretPortal,
+      null,
+      this
+    );
+  }
+
+  enterSecretPortal(player, portal) {
+    // Immediately pause physics and disable input
+    this.physics.pause();
+    this.player.disableInput = true;
+
+    // Fade out the scene
+    this.cameras.main.fadeOut(1000, 0, 0, 0);
+
+    // Wait for fade to complete before cleanup and scene transition
+    this.time.delayedCall(1000, () => {
+      // Remove all colliders first
+      this.physics.world.colliders.destroy();
+
+      // Then clean up the scene
+      this.cleanupScene();
+
+      // Finally start the new scene
+      this.scene.start('HomomorphicEncryptionBossFightScene', {
+        playerData: this.player.getData(),
+      });
     });
   }
 
@@ -536,8 +615,14 @@ export class GameScene extends Phaser.Scene {
       this.dataBreaches.create(pos.x, pos.y, 'dataBreach');
     });
 
-    // Overlap with player
-    this.physics.add.overlap(this.player, this.dataBreaches, this.handleDataBreachCollision, null, this);
+    // Store the overlap reference
+    this.playerDataBreachesOverlap = this.physics.add.overlap(
+      this.player,
+      this.dataBreaches,
+      this.handleDataBreachCollision,
+      null,
+      this
+    );
   }
 
   createHealthPacks() {
@@ -558,8 +643,14 @@ export class GameScene extends Phaser.Scene {
       this.healthPacks.create(pos.x, pos.y, 'item_healthPack');
     });
 
-    // Overlap with player
-    this.physics.add.overlap(this.player, this.healthPacks, this.collectHealthPack, null, this);
+    // Store the overlap reference
+    this.playerHealthPacksOverlap = this.physics.add.overlap(
+      this.player,
+      this.healthPacks,
+      this.collectHealthPack,
+      null,
+      this
+    );
   }
 
   createPetSkills() {
@@ -574,8 +665,14 @@ export class GameScene extends Phaser.Scene {
     this.petSkills.create(5500, 150, 'petSkill_homomorphicEncryption');
     this.petSkills.create(7000, 450, 'petSkill_polymorphicEncryption');
 
-    // Overlap with player
-    this.physics.add.overlap(this.player, this.petSkills, this.collectPetSkill, null, this);
+    // Store the overlap reference
+    this.playerPetSkillsOverlap = this.physics.add.overlap(
+      this.player,
+      this.petSkills,
+      this.collectPetSkill,
+      null,
+      this
+    );
   }
 
   handleWeaponEnemyCollision(weapon, enemy) {
@@ -607,15 +704,83 @@ export class GameScene extends Phaser.Scene {
   }
 
   cleanupScene() {
-    // Destroy physics groups with null checks
-    ['activeEnemies', 'platforms', 'movingPlatforms', 'weaponPowerUps',
-      'dataBreaches', 'healthPacks', 'petSkills', 'enemyProjectiles'].forEach(group => {
-        if (this[group]) {
+    // Remove colliders and overlaps
+    if (this.playerPlatformCollider) {
+      this.physics.world.removeCollider(this.playerPlatformCollider);
+      this.playerPlatformCollider = null;
+    }
+    if (this.playerMovingPlatformCollider) {
+      this.physics.world.removeCollider(this.playerMovingPlatformCollider);
+      this.playerMovingPlatformCollider = null;
+    }
+    if (this.activeEnemiesPlatformCollider) {
+      this.physics.world.removeCollider(this.activeEnemiesPlatformCollider);
+      this.activeEnemiesPlatformCollider = null;
+    }
+    if (this.activeEnemiesMovingPlatformCollider) {
+      this.physics.world.removeCollider(this.activeEnemiesMovingPlatformCollider);
+      this.activeEnemiesMovingPlatformCollider = null;
+    }
+    if (this.playerWeaponActiveEnemiesOverlap) {
+      this.physics.world.removeCollider(this.playerWeaponActiveEnemiesOverlap);
+      this.playerWeaponActiveEnemiesOverlap = null;
+    }
+    if (this.playerActiveEnemiesOverlap) {
+      this.physics.world.removeCollider(this.playerActiveEnemiesOverlap);
+      this.playerActiveEnemiesOverlap = null;
+    }
+    if (this.playerProjectilesActiveEnemiesOverlap) {
+      this.physics.world.removeCollider(this.playerProjectilesActiveEnemiesOverlap);
+      this.playerProjectilesActiveEnemiesOverlap = null;
+    }
+    if (this.playerDataBreachesOverlap) {
+      this.physics.world.removeCollider(this.playerDataBreachesOverlap);
+      this.playerDataBreachesOverlap = null;
+    }
+    if (this.playerHealthPacksOverlap) {
+      this.physics.world.removeCollider(this.playerHealthPacksOverlap);
+      this.playerHealthPacksOverlap = null;
+    }
+    if (this.playerPetSkillsOverlap) {
+      this.physics.world.removeCollider(this.playerPetSkillsOverlap);
+      this.playerPetSkillsOverlap = null;
+    }
+    if (this.playerWeaponPowerUpsOverlap) {
+      this.physics.world.removeCollider(this.playerWeaponPowerUpsOverlap);
+      this.playerWeaponPowerUpsOverlap = null;
+    }
+    if (this.playerFinishPointOverlap) {
+      this.physics.world.removeCollider(this.playerFinishPointOverlap);
+      this.playerFinishPointOverlap = null;
+    }
+    if (this.playerSecretPortalOverlap) {
+      this.physics.world.removeCollider(this.playerSecretPortalOverlap);
+      this.playerSecretPortalOverlap = null;
+    }
+    if (this.playerEnemyProjectilesOverlap) {
+      this.physics.world.removeCollider(this.playerEnemyProjectilesOverlap);
+      this.playerEnemyProjectilesOverlap = null;
+    }
+
+    // Now proceed to destroy groups and objects
+    [
+      'activeEnemies',
+      'platforms',
+      'movingPlatforms',
+      'weaponPowerUps',
+      'dataBreaches',
+      'healthPacks',
+      'petSkills',
+      'enemyProjectiles',
+    ].forEach((group) => {
+      if (this[group]) {
+        if (this[group].destroy) {
           this[group].clear(true, true); // Clear and destroy children
           this[group].destroy(true);
-          this[group] = null;
         }
-      });
+        this[group] = null;
+      }
+    });
 
     // Destroy player
     if (this.player) {
@@ -623,18 +788,18 @@ export class GameScene extends Phaser.Scene {
       this.player = null;
     }
 
+    // Destroy AI helpers if any
     if (this.aiHelpers) {
       this.aiHelpers.clear(true, true);
       this.aiHelpers.destroy(true);
       this.aiHelpers = null;
-    }    
+    }
 
-    // Clean up emitters
+    // Destroy particles
     if (this.platformParticleEmitter) {
       this.platformParticleEmitter.destroy();
       this.platformParticleEmitter = null;
     }
-
     if (this.projectileParticleEmitter) {
       this.projectileParticleEmitter.destroy();
       this.projectileParticleEmitter = null;
@@ -647,7 +812,6 @@ export class GameScene extends Phaser.Scene {
     // Clear input
     this.input.keyboard.removeAllKeys();
   }
-
 
   handlePlayerEnemyCollision(player, enemy) {
     if (player.activePetEffects.PE) {
@@ -790,8 +954,14 @@ export class GameScene extends Phaser.Scene {
       this.weaponPowerUps.add(powerUp);
     });
 
-    // Overlap with player
-    this.physics.add.overlap(this.player, this.weaponPowerUps, this.collectWeaponPowerUp, null, this);
+    // Store the overlap reference
+    this.playerWeaponPowerUpsOverlap = this.physics.add.overlap(
+      this.player,
+      this.weaponPowerUps,
+      this.collectWeaponPowerUp,
+      null,
+      this
+    );
   }
 
   collectWeaponPowerUp(player, powerUp) {
@@ -888,14 +1058,14 @@ export class GameScene extends Phaser.Scene {
   reachFinish(player, finishPoint) {
     // Immediately remove all physics overlaps and colliders
     this.physics.world.colliders.destroy();
-  
+
     // Disable all input
     this.input.keyboard.enabled = false;
     player.disableInput = true;
-  
+
     // Stop all physics
     this.physics.pause();
-  
+
     // Stop all movements
     player.body.setVelocity(0);
     this.activeEnemies.children.iterate((enemy) => {
@@ -903,7 +1073,7 @@ export class GameScene extends Phaser.Scene {
         enemy.body.setVelocity(0);
       }
     });
-  
+
     // Celebration effects
     const emitter = this.add.particles(player.x, player.y, 'particle', {
       speed: { min: -200, max: 200 },
@@ -914,12 +1084,12 @@ export class GameScene extends Phaser.Scene {
       tint: [0x00FF00, 0xFF10F0, 0x00FFFF],
       quantity: 100,
     });
-  
+
     const levelCompleteText = this.add.text(player.x, player.y - 100, 'Level Completed!', {
       fontSize: '48px',
       fill: '#fff',
     }).setOrigin(0.5);
-  
+
     // Sequence the transition effects
     this.tweens.add({
       targets: levelCompleteText,
@@ -928,31 +1098,31 @@ export class GameScene extends Phaser.Scene {
       duration: 2000,
       ease: 'Power1',
     });
-  
+
     // Camera effects
     this.cameras.main.flash(500, 255, 255, 255);
     this.cameras.main.zoomTo(2, 2000, 'Linear', true);
-  
+
     // Handle the transition
     this.time.delayedCall(2500, () => {
       // Stop particle emitter
       emitter.stop();
-  
+
       // Fade out
       this.cameras.main.fadeOut(1000, 0, 0, 0);
-  
+
       // Queue the scene transition
       this.time.delayedCall(1000, () => {
         // Clean up before transition
         this.cleanupScene();
-  
+
         // Start Level2Scene and pass playerData
         this.scene.start('Level2Scene', {
           playerData: this.player.getData(),
         });
       });
     });
-  }  
+  }
 
   // Add new cleanup method to GameScene
   cleanupScene() {

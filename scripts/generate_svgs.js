@@ -1065,3 +1065,265 @@ for (let i = 1; i <= 4; i++) {
     <circle cx="32" cy="32" r="${10 + i * 5}" fill="#FF0000" opacity="${opacity}" />
   `);
 }
+
+// Generate base Homomorphic Encryption Boss SVG
+generateSVG('he_boss_phase1.svg', 96, 96, `
+  <!-- Phase 1: Fully Encrypted Form -->
+  <defs>
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FF10F0;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#00FFFF;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Outer Shield -->
+  <path d="M48,8 L88,28 L88,68 L48,88 L8,68 L8,28 Z" 
+        fill="#291D54" stroke="#FF10F0" stroke-width="2"/>
+  
+  <!-- Encrypted Core -->
+  <circle cx="48" cy="48" r="24" fill="url(#coreGlow)"/>
+  
+  <!-- Defense Matrix -->
+  <circle cx="48" cy="48" r="32" fill="none" stroke="#00FFFF" stroke-width="1" stroke-dasharray="4,4"/>
+  <circle cx="48" cy="48" r="28" fill="none" stroke="#FF10F0" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Encryption Symbols -->
+  <text x="48" y="45" font-family="monospace" fill="#FFFFFF" font-size="8" text-anchor="middle">E(x×y)</text>
+  <text x="48" y="55" font-family="monospace" fill="#FFFFFF" font-size="8" text-anchor="middle">E(k+m)</text>
+`);
+
+// Generate damaged boss state
+generateSVG('he_boss_phase2.svg', 96, 96, `
+  <!-- Phase 2: Partially Decrypted -->
+  <defs>
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FF10F0;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#00FFFF;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Cracked Shield -->
+  <path d="M48,8 L88,28 L88,68 L48,88 L8,68 L8,28 Z" 
+        fill="#291D54" stroke="#FF10F0" stroke-width="2" stroke-dasharray="10,5"/>
+  
+  <!-- Exposed Core -->
+  <circle cx="48" cy="48" r="26" fill="url(#coreGlow)"/>
+  
+  <!-- Unstable Matrix -->
+  <circle cx="48" cy="48" r="32" fill="none" stroke="#00FFFF" stroke-width="2" stroke-dasharray="15,15"/>
+  
+  <!-- Glitched Symbols -->
+  <text x="48" y="45" font-family="monospace" fill="#FFFFFF" font-size="8" text-anchor="middle" opacity="0.7">E(x)×E(y)</text>
+  <text x="48" y="55" font-family="monospace" fill="#FFFFFF" font-size="8" text-anchor="middle" opacity="0.7">E(k)</text>
+`);
+
+// Generate final boss state
+generateSVG('he_boss_phase3.svg', 96, 96, `
+  <!-- Phase 3: Encryption Breaking -->
+  <defs>
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FF10F0;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#00FFFF;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Broken Shield -->
+  <path d="M48,8 L88,28 L88,68 L48,88 L8,68 L8,28 Z" 
+        fill="#291D54" stroke="#FF10F0" stroke-width="3" stroke-dasharray="5,15"/>
+  
+  <!-- Unstable Core -->
+  <circle cx="48" cy="48" r="28" fill="url(#coreGlow)"/>
+  
+  <!-- Breaking Matrix -->
+  <circle cx="48" cy="48" r="32" fill="none" stroke="#00FFFF" stroke-width="3" stroke-dasharray="2,8"/>
+  
+  <!-- Decrypted Symbols -->
+  <text x="48" y="45" font-family="monospace" fill="#FFFFFF" font-size="8" text-anchor="middle">x × y</text>
+  <text x="48" y="55" font-family="monospace" fill="#FFFFFF" font-size="8" text-anchor="middle">k + m</text>
+`);
+
+// Generate Boss Arena Background
+generateSVG('he_boss_background.svg', 800, 600, `
+  <!-- Encrypted Domain Background -->
+  <defs>
+    <pattern id="matrixPattern" width="100" height="100" patternUnits="userSpaceOnUse">
+      <text x="10" y="20" font-family="monospace" fill="#00FFFF" opacity="0.1" font-size="10">E(x+y)</text>
+      <text x="50" y="40" font-family="monospace" fill="#FF10F0" opacity="0.1" font-size="10">E(x×y)</text>
+      <text x="30" y="60" font-family="monospace" fill="#FFFFFF" opacity="0.1" font-size="10">E(k)</text>
+      <text x="70" y="80" font-family="monospace" fill="#00FFFF" opacity="0.1" font-size="10">E(m)</text>
+    </pattern>
+    <radialGradient id="arenaGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#120458;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#291D54;stop-opacity:1"/>
+    </radialGradient>
+  </defs>
+  <!-- Background Elements -->
+  <rect x="0" y="0" width="800" height="600" fill="url(#arenaGlow)"/>
+  <rect x="0" y="0" width="800" height="600" fill="url(#matrixPattern)"/>
+  <!-- Encrypted Domain Border -->
+<rect x="0" y="0" width="800" height="600" 
+     fill="none" stroke="#FF10F0" stroke-width="4" 
+     stroke-dasharray="20,10,5,10"/>
+`);
+
+// Generate Encrypted Platform
+generateSVG('he_platform.svg', 128, 32, `
+  <!-- Homomorphic Platform -->
+  <defs>
+    <linearGradient id="platformGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF10F0;stop-opacity:0.5"/>
+      <stop offset="50%" style="stop-color:#00FFFF;stop-opacity:0.5"/>
+      <stop offset="100%" style="stop-color:#FF10F0;stop-opacity:0.5"/>
+    </linearGradient>
+  </defs>
+  <!-- Platform Base -->
+  <rect x="0" y="0" width="128" height="32" fill="#291D54"/>
+  <rect x="0" y="0" width="128" height="32" fill="url(#platformGlow)"/>
+  <!-- Encryption Circuit Pattern -->
+  <line x1="0" y1="16" x2="128" y2="16" stroke="#00FFFF" stroke-width="1" stroke-dasharray="8,4"/>
+  <text x="64" y="20" font-family="monospace" fill="#FFFFFF" font-size="8" text-anchor="middle">E(platform)</text>
+`);
+
+// Generate Encrypted Projectile
+generateSVG('encrypted_projectile.svg', 24, 24, `
+  <!-- Encrypted Projectile -->
+  <defs>
+    <radialGradient id="projectileGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FF10F0;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#00FFFF;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+  <!-- Projectile Core -->
+  <circle cx="12" cy="12" r="8" fill="url(#projectileGlow)"/>
+  <!-- Encryption Field -->
+  <circle cx="12" cy="12" r="10" fill="none" stroke="#FF10F0" stroke-width="1">
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+  </circle>
+  <!-- Data Symbols -->
+<text x="12" y="14" font-family="monospace" fill="#FFFFFF" font-size="6" text-anchor="middle">Ex</text>
+`);
+
+// Generate Homomorphic Minion - Now clearly a robotic enemy
+generateSVG('he_minion.svg', 48, 48, `
+  <!-- Data Collection Minion - Evil Robot Design -->
+  <defs>
+    <linearGradient id="minionGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF10F0;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#00FFFF;stop-opacity:0.8"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Robot Head -->
+  <path d="M18,12 L30,12 L32,16 L30,20 L18,20 L16,16 Z" 
+        fill="#291D54" stroke="#FF10F0" stroke-width="1"/>
+  
+  <!-- Evil Glowing Eyes -->
+  <circle cx="22" cy="16" r="2" fill="#FF0000">
+    <animate attributeName="opacity" values="1;0.5;1" dur="1s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="26" cy="16" r="2" fill="#FF0000">
+    <animate attributeName="opacity" values="1;0.5;1" dur="1s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Robot Body -->
+  <path d="M20,20 L28,20 L32,36 L16,36 Z" 
+        fill="#291D54" stroke="#FF10F0" stroke-width="1"/>
+  
+  <!-- Antenna -->
+  <line x1="24" y1="8" x2="24" y2="12" stroke="#FF10F0" stroke-width="2"/>
+  <circle cx="24" cy="8" r="2" fill="#FF10F0"/>
+  
+  <!-- Arms -->
+  <path d="M16,24 L12,28 L12,32 L14,34" stroke="#FF10F0" stroke-width="2" fill="none"/>
+  <path d="M32,24 L36,28 L36,32 L34,34" stroke="#FF10F0" stroke-width="2" fill="none"/>
+  
+  <!-- Matrix Core -->
+  <rect x="22" y="24" width="4" height="8" fill="#00FFFF" opacity="0.8"/>
+  <text x="24" y="30" font-family="monospace" fill="#000" font-size="6" text-anchor="middle">01</text>
+  
+  <!-- Energy Field -->
+  <circle cx="24" cy="24" r="16" fill="none" stroke="#FF10F0" stroke-width="1" stroke-dasharray="2,2">
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 24 24" to="360 24 24" dur="6s" repeatCount="indefinite"/>
+  </circle>
+`);
+
+// Generate Decryption Key - Now OBVIOUSLY a key!
+generateSVG('decryption_key.svg', 48, 24, `
+  <!-- Decryption Key - Classic Key Shape -->
+  <defs>
+    <linearGradient id="keyGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#FFFFFF;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Key Bow (Head) - Large and ornate -->
+  <path d="M4,12 A6,6 0 1,0 4,12.1 M4,8 L4,16" 
+        stroke="url(#keyGlow)" stroke-width="3" fill="none"/>
+  
+  <!-- Key Shaft -->
+  <line x1="10" y1="12" x2="40" y2="12" 
+        stroke="url(#keyGlow)" stroke-width="3"/>
+  
+  <!-- Key Teeth - Distinctive notches -->
+  <path d="M30,12 L32,8 L34,12 L36,8 L38,12" 
+        stroke="url(#keyGlow)" stroke-width="3" fill="none"/>
+  
+  <!-- Sparkle Effect -->
+  <circle cx="4" cy="12" r="3" fill="#FFFFFF">
+    <animate attributeName="opacity" values="1;0;1" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Binary Pattern -->
+  <text x="20" y="10" font-family="monospace" fill="#FFFFFF" font-size="4">DECRYPT</text>
+  
+  <!-- Energy Pulse -->
+  <circle cx="4" cy="12" r="8" fill="url(#keyGlow)" opacity="0.3">
+    <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2s" repeatCount="indefinite"/>
+  </circle>
+`);
+
+generateSVG('secret_portal.svg', 96, 96, `
+  <!-- Homomorphic Portal -->
+  <defs>
+    <radialGradient id="portalGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FF10F0;stop-opacity:1"/>
+      <stop offset="30%" style="stop-color:#00FFFF;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#291D54;stop-opacity:0"/>
+    </radialGradient>
+    <filter id="portalBlur">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+  </defs>
+
+  <!-- Portal Background -->
+  <circle cx="48" cy="48" r="44" fill="url(#portalGlow)" filter="url(#portalBlur)"/>
+  
+  <!-- Encryption Field -->
+  <g>
+    <circle cx="48" cy="48" r="40" fill="none" stroke="#FF10F0" stroke-width="2">
+      <animateTransform attributeName="transform" type="rotate"
+        from="0 48 48" to="360 48 48" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="48" cy="48" r="36" fill="none" stroke="#00FFFF" stroke-width="2">
+      <animateTransform attributeName="transform" type="rotate"
+        from="360 48 48" to="0 48 48" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="48" cy="48" r="32" fill="none" stroke="#FF10F0" stroke-width="1">
+      <animateTransform attributeName="transform" type="rotate"
+        from="0 48 48" to="360 48 48" dur="4s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Matrix Symbols -->
+  <g font-family="monospace" fill="#FFFFFF" font-size="8">
+    <text x="48" y="40" text-anchor="middle">E(x×y)</text>
+    <text x="48" y="52" text-anchor="middle">E(k+m)</text>
+    <text x="48" y="64" text-anchor="middle">HOMO</text>
+  </g>
+</svg>
+`);

@@ -77,7 +77,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('start_button', 'src/assets/sprites/start_button.svg');
 
     // Particle and other effects
-    this.load.image('particle', 'src/assets/sprites/particle.svg');
+    // this.load.image('particle', 'src/assets/sprites/particle.svg');
     this.load.image('platform_glow', 'src/assets/sprites/platform_glow.svg');
     this.load.image('neon_trail', 'src/assets/sprites/neon_trail.svg');
     this.load.image('city_light', 'src/assets/sprites/city_light.svg');
@@ -97,12 +97,34 @@ export class PreloadScene extends Phaser.Scene {
     // Load boss projectile
     this.load.image('boss_projectile', 'src/assets/sprites/boss_projectile.svg');
 
+    // Generate a simple 'particle' texture if it doesn't exist
+    if (!this.textures.exists('particle')) {
+      const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+      graphics.fillStyle(0xffffff, 1);
+      graphics.fillRect(0, 0, 4, 4);
+      graphics.generateTexture('particle', 4, 4);
+      graphics.destroy();
+    }
+
+    // New assets for Homomorphic Encryption Boss Fight
+    this.load.image('he_boss_phase1', 'src/assets/sprites/he_boss_phase1.svg');
+    this.load.image('he_boss_phase2', 'src/assets/sprites/he_boss_phase2.svg');
+    this.load.image('he_boss_phase3', 'src/assets/sprites/he_boss_phase3.svg');
+    this.load.image('he_minion', 'src/assets/sprites/he_minion.svg');
+    this.load.image('decryption_key', 'src/assets/sprites/decryption_key.svg');
+    this.load.image('encrypted_projectile', 'src/assets/sprites/encrypted_projectile.svg');
+    this.load.image('he_boss_background', 'src/assets/sprites/he_boss_background.svg');
+    this.load.image('he_platform', 'src/assets/sprites/he_platform.svg');
+
+    // Load portal SVG
+    this.load.svg('secret_portal', 'src/assets/sprites/secret_portal.svg', { width: 64, height: 64 });
+
     // Load laser charge frames
     for (let i = 1; i <= 4; i++) {
-        this.load.image(
-            `laser_charge_frame${i}`,
-            `src/assets/sprites/laser_charge_frame${i}.svg`
-        );
+      this.load.image(
+        `laser_charge_frame${i}`,
+        `src/assets/sprites/laser_charge_frame${i}.svg`
+      );
     }
   }
 

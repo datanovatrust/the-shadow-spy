@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  
+  <!-- Encrypted Domain Background -->
+  <defs>
+    <pattern id="matrixPattern" width="100" height="100" patternUnits="userSpaceOnUse">
+      <text x="10" y="20" font-family="monospace" fill="#00FFFF" opacity="0.1" font-size="10">E(x+y)</text>
+      <text x="50" y="40" font-family="monospace" fill="#FF10F0" opacity="0.1" font-size="10">E(x×y)</text>
+      <text x="30" y="60" font-family="monospace" fill="#FFFFFF" opacity="0.1" font-size="10">E(k)</text>
+      <text x="70" y="80" font-family="monospace" fill="#00FFFF" opacity="0.1" font-size="10">E(m)</text>
+    </pattern>
+    <radialGradient id="arenaGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#120458;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#291D54;stop-opacity:1"/>
+    </radialGradient>
+  </defs>
+  <!-- Background Elements -->
+  <rect x="0" y="0" width="800" height="600" fill="url(#arenaGlow)"/>
+  <rect x="0" y="0" width="800" height="600" fill="url(#matrixPattern)"/>
+  <!-- Encrypted Domain Border -->
+<rect x="0" y="0" width="800" height="600" 
+     fill="none" stroke="#FF10F0" stroke-width="4" 
+     stroke-dasharray="20,10,5,10"/>
+
+</svg>

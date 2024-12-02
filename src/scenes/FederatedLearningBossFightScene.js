@@ -500,11 +500,9 @@ export class FederatedLearningBossFightScene extends Phaser.Scene {
         );
         victoryText.setOrigin(0.5);
 
-        // Transition to the next boss or end game
+        // Transition to the Homomorphic Encryption Boss Fight Scene
         this.time.delayedCall(2000, () => {
-            // Transition to the next scene or end game
-            // For now, we'll just restart the game or go to a 'GameOverScene'
-            this.scene.start('GameOverScene', {
+            this.scene.start('HomomorphicEncryptionBossFightScene', {
                 playerData: this.player.getData(),
             });
         });
