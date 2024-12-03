@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+  
+  <defs>
+    <radialGradient id="nodeGlow3" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#9C27B0;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#4A148C;stop-opacity:1"/>
+    </radialGradient>
+  </defs>
+  <!-- Base Node -->
+  <polygon points="32,8 56,32 32,56 8,32" fill="url(#nodeGlow3)" stroke="#BA68C8" stroke-width="2"/>
+  <!-- Computation Indicators -->
+  <path d="M24,32 L40,32 M32,24 L32,40" stroke="#FFFFFF" stroke-width="3"/>
+  <!-- Binary Ring -->
+  <polygon points="32,4 60,32 32,60 4,32" fill="none" stroke="#CE93D8" stroke-width="1" 
+    stroke-dasharray="4,4">
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 32 32" to="360 32 32" dur="6s" repeatCount="indefinite"/>
+  </polygon>
+  <text x="32" y="36" font-family="monospace" fill="#FFFFFF" font-size="8" text-anchor="middle">NODE 3</text>
+
+</svg>

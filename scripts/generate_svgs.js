@@ -751,22 +751,6 @@ generateSVG('tree.svg', 64, 128, `
   <circle cx="48" cy="64" r="16" fill="#32CD32" />
 `);
 
-// Generate New Player Character SVG with Whimsical Style
-generateSVG('player.svg', 32, 48, `
-  <!-- Whimsical Player Character -->
-  <!-- Body -->
-  <rect x="12" y="24" width="8" height="20" fill="#FFDAB9" />
-  <!-- Head -->
-  <circle cx="16" cy="16" r="8" fill="#FFE4B5" />
-  <!-- Eyes -->
-  <circle cx="13" cy="14" r="1.5" fill="#000000" />
-  <circle cx="19" cy="14" r="1.5" fill="#000000" />
-  <!-- Smile -->
-  <path d="M13,18 Q16,21 19,18" stroke="#000000" stroke-width="1" fill="none" />
-  <!-- Hat -->
-  <ellipse cx="16" cy="10" rx="10" ry="4" fill="#FF69B4" />
-`);
-
 // Generate Cloud SVG
 generateSVG('cloud.svg', 128, 64, `
   <!-- Whimsical Cloud -->
@@ -782,13 +766,13 @@ generateSVG('sun.svg', 64, 64, `
   <circle cx="32" cy="32" r="16" fill="#FFD700" />
   <!-- Rays -->
   ${[...Array(12)].map((_, i) => {
-    const angle = (i * 30) * (Math.PI / 180);
-    const x1 = 32 + Math.cos(angle) * 20;
-    const y1 = 32 + Math.sin(angle) * 20;
-    const x2 = 32 + Math.cos(angle) * 28;
-    const y2 = 32 + Math.sin(angle) * 28;
-    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#FFD700" stroke-width="2" />`;
-  }).join('\n')}
+  const angle = (i * 30) * (Math.PI / 180);
+  const x1 = 32 + Math.cos(angle) * 20;
+  const y1 = 32 + Math.sin(angle) * 20;
+  const x2 = 32 + Math.cos(angle) * 28;
+  const y2 = 32 + Math.sin(angle) * 28;
+  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#FFD700" stroke-width="2" />`;
+}).join('\n')}
 `);
 
 // Generate Fish Enemy SVG
@@ -818,9 +802,9 @@ generateSVG('dock.svg', 256, 64, `
   <rect x="0" y="32" width="256" height="32" fill="#A0522D" />
   <!-- Planks -->
   ${[...Array(16)].map((_, i) => {
-    const x = i * 16;
-    return `<line x1="${x}" y1="32" x2="${x}" y2="64" stroke="#8B4513" stroke-width="2" />`;
-  }).join('\n')}
+  const x = i * 16;
+  return `<line x1="${x}" y1="32" x2="${x}" y2="64" stroke="#8B4513" stroke-width="2" />`;
+}).join('\n')}
   <!-- Support Beams -->
   <rect x="0" y="64" width="8" height="32" fill="#8B4513" />
   <rect x="248" y="64" width="8" height="32" fill="#8B4513" />
@@ -990,9 +974,9 @@ generateSVG('gaussian_wave.svg', 800, 200, `
     </linearGradient>
   </defs>
   <path d="M0,100 ${[...Array(801).keys()].map(x => {
-    const y = 100 - 80 * Math.exp(-Math.pow((x - 400) / 100, 2));
-    return `L${x},${y}`;
-  }).join(' ')}" fill="none" stroke="url(#gaussianGradient)" stroke-width="2"/>
+  const y = 100 - 80 * Math.exp(-Math.pow((x - 400) / 100, 2));
+  return `L${x},${y}`;
+}).join(' ')}" fill="none" stroke="url(#gaussianGradient)" stroke-width="2"/>
 `);
 
 // Generate epsilon SVG
@@ -1326,4 +1310,326 @@ generateSVG('secret_portal.svg', 96, 96, `
     <text x="48" y="64" text-anchor="middle">HOMO</text>
   </g>
 </svg>
+`);
+
+// Secure Multiparty Computation Boss
+
+// Generate the 4 friendly receivers (representing compute nodes)
+// Each has a unique color and shape to be easily distinguishable
+generateSVG('smc_friendly1.svg', 64, 64, `
+  <defs>
+    <radialGradient id="nodeGlow1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#4CAF50;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#1B5E20;stop-opacity:1"/>
+    </radialGradient>
+  </defs>
+  <!-- Base Node -->
+  <circle cx="32" cy="32" r="24" fill="url(#nodeGlow1)" stroke="#81C784" stroke-width="2"/>
+  <!-- Computation Indicators -->
+  <path d="M24,32 L40,32 M32,24 L32,40" stroke="#FFFFFF" stroke-width="3"/>
+  <!-- Binary Ring -->
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#A5D6A7" stroke-width="1" 
+    stroke-dasharray="4,4">
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 32 32" to="360 32 32" dur="6s" repeatCount="indefinite"/>
+  </circle>
+  <text x="32" y="36" font-family="monospace" fill="#FFFFFF" font-size="8" text-anchor="middle">NODE 1</text>
+`);
+
+generateSVG('smc_friendly2.svg', 64, 64, `
+  <defs>
+    <radialGradient id="nodeGlow2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#2196F3;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#0D47A1;stop-opacity:1"/>
+    </radialGradient>
+  </defs>
+  <!-- Base Node -->
+  <rect x="8" y="8" width="48" height="48" rx="8" fill="url(#nodeGlow2)" stroke="#64B5F6" stroke-width="2"/>
+  <!-- Computation Indicators -->
+  <path d="M24,32 L40,32 M32,24 L32,40" stroke="#FFFFFF" stroke-width="3"/>
+  <!-- Binary Ring -->
+  <rect x="4" y="4" width="56" height="56" rx="10" fill="none" stroke="#90CAF9" stroke-width="1" 
+    stroke-dasharray="4,4">
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 32 32" to="360 32 32" dur="6s" repeatCount="indefinite"/>
+  </rect>
+  <text x="32" y="36" font-family="monospace" fill="#FFFFFF" font-size="8" text-anchor="middle">NODE 2</text>
+`);
+
+generateSVG('smc_friendly3.svg', 64, 64, `
+  <defs>
+    <radialGradient id="nodeGlow3" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#9C27B0;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#4A148C;stop-opacity:1"/>
+    </radialGradient>
+  </defs>
+  <!-- Base Node -->
+  <polygon points="32,8 56,32 32,56 8,32" fill="url(#nodeGlow3)" stroke="#BA68C8" stroke-width="2"/>
+  <!-- Computation Indicators -->
+  <path d="M24,32 L40,32 M32,24 L32,40" stroke="#FFFFFF" stroke-width="3"/>
+  <!-- Binary Ring -->
+  <polygon points="32,4 60,32 32,60 4,32" fill="none" stroke="#CE93D8" stroke-width="1" 
+    stroke-dasharray="4,4">
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 32 32" to="360 32 32" dur="6s" repeatCount="indefinite"/>
+  </polygon>
+  <text x="32" y="36" font-family="monospace" fill="#FFFFFF" font-size="8" text-anchor="middle">NODE 3</text>
+`);
+
+generateSVG('smc_friendly4.svg', 64, 64, `
+  <defs>
+    <radialGradient id="nodeGlow4" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FF5722;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#BF360C;stop-opacity:1"/>
+    </radialGradient>
+  </defs>
+  <!-- Base Node -->
+  <path d="M32,8 L56,20 L56,44 L32,56 L8,44 L8,20 Z" fill="url(#nodeGlow4)" stroke="#FF8A65" stroke-width="2"/>
+  <!-- Computation Indicators -->
+  <path d="M24,32 L40,32 M32,24 L32,40" stroke="#FFFFFF" stroke-width="3"/>
+  <!-- Binary Ring -->
+  <path d="M32,4 L60,16 L60,48 L32,60 L4,48 L4,16 Z" fill="none" stroke="#FFAB91" stroke-width="1" 
+    stroke-dasharray="4,4">
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 32 32" to="360 32 32" dur="6s" repeatCount="indefinite"/>
+  </path>
+  <text x="32" y="36" font-family="monospace" fill="#FFFFFF" font-size="8" text-anchor="middle">NODE 4</text>
+`);
+
+// Generate the secure package that needs to be delivered
+generateSVG('smc_package.svg', 32, 32, `
+<!-- Package Base -->
+<rect x="2" y="2" width="20" height="20" 
+      fill="#FFD700" stroke="#FFA000" stroke-width="2" filter="url(#dropShadow)"/>
+
+<!-- Lock Symbol -->
+<circle cx="12" cy="12" r="4" fill="none" stroke="#FFA000" stroke-width="2"/>
+<rect x="10" y="10" width="4" height="6" fill="#FFA000"/>
+
+<!-- Attention-grabbing glow -->
+<rect x="0" y="0" width="24" height="24" fill="none" 
+      stroke="#FFE082" stroke-width="2" stroke-dasharray="4,4">
+  <animateTransform attributeName="transform" type="rotate"
+    from="0 12 12" to="360 12 12" dur="2s" repeatCount="indefinite"/>
+</rect>
+
+<!-- Bounce indicator -->
+<path d="M2,22 L22,22" stroke="#FFE082" stroke-width="2" stroke-dasharray="2,2">
+  <animate attributeName="d" 
+    values="M2,22 L22,22;M2,20 C12,24 12,24 22,20;M2,22 L22,22" 
+    dur="1s" repeatCount="indefinite"/>
+</path>
+`);
+
+// Generate the SMC Boss
+generateSVG('smc_boss.svg', 128, 128, `
+  <defs>
+    <radialGradient id="bossCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FF1744;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#D50000;stop-opacity:1"/>
+    </radialGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#FF1744"/>
+    </filter>
+  </defs>
+  <!-- Evil Core -->
+  <circle cx="64" cy="64" r="32" fill="url(#bossCore)" filter="url(#shadow)"/>
+  <!-- Malicious Data Tendrils -->
+  <g stroke="#FF1744" stroke-width="3" fill="none">
+    <path d="M64,32 C32,32 32,96 64,96">
+      <animate attributeName="d" 
+        values="M64,32 C32,32 32,96 64,96;M64,32 C96,32 96,96 64,96;M64,32 C32,32 32,96 64,96" 
+        dur="4s" repeatCount="indefinite"/>
+    </path>
+    <path d="M32,64 C32,32 96,32 96,64">
+      <animate attributeName="d" 
+        values="M32,64 C32,32 96,32 96,64;M32,64 C32,96 96,96 96,64;M32,64 C32,32 96,32 96,64" 
+        dur="4s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  <!-- Corruption Aura -->
+  <circle cx="64" cy="64" r="48" stroke="#FF1744" stroke-width="2" fill="none" stroke-dasharray="8,8">
+    <animate attributeName="r" values="48;52;48" dur="2s" repeatCount="indefinite"/>
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 64 64" to="360 64 64" dur="8s" repeatCount="indefinite"/>
+  </circle>
+  <!-- Evil Eyes -->
+  <circle cx="56" cy="56" r="4" fill="#FFFFFF"/>
+  <circle cx="72" cy="56" r="4" fill="#FFFFFF"/>
+  <circle cx="56" cy="56" r="2" fill="#000000"/>
+  <circle cx="72" cy="56" r="2" fill="#000000"/>
+  <!-- Menacing Mouth -->
+  <path d="M52,72 Q64,80 76,72" stroke="#FFFFFF" stroke-width="3" fill="none"/>
+`);
+
+// Generate the Boss Level Background
+generateSVG('smc_boss_background.svg', 800, 600, `
+  <defs>
+    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M0,0 L50,0 L50,50 L0,50 Z" fill="none" stroke="#1A237E" stroke-width="0.5"/>
+    </pattern>
+    <radialGradient id="vignette" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:0"/>
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:0.7"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Dark Background -->
+  <rect width="800" height="600" fill="#0D1117"/>
+  <!-- Cyber Grid -->
+  <rect width="800" height="600" fill="url(#grid)"/>
+  <!-- Data Flow Lines -->
+  <g stroke="#304FFE" stroke-width="1" opacity="0.3">
+    ${Array.from({ length: 10 }, (_, i) => `
+      <line x1="${i * 80}" y1="0" x2="${i * 80 + 400}" y2="600">
+        <animate attributeName="y2" values="600;0;600" dur="${3 + i}s" repeatCount="indefinite"/>
+      </line>
+    `).join('')}
+  </g>
+  <!-- Binary Rain -->
+  <g fill="#304FFE" font-family="monospace" font-size="10" opacity="0.2">
+    ${Array.from({ length: 20 }, (_, i) => `
+      <text x="${i * 40}" y="0">
+        <animate attributeName="y" values="0;600;0" dur="${5 + i % 3}s" repeatCount="indefinite"/>
+        01
+      </text>
+    `).join('')}
+  </g>
+  <!-- Vignette Effect -->
+  <rect width="800" height="600" fill="url(#vignette)"/>
+  <!-- Edge Glow -->
+  <rect width="800" height="600" fill="none" stroke="#304FFE" stroke-width="4" filter="url(#glow)"/>
+`);
+
+generateSVG('boss_projectile.svg', 16, 16, `
+  <circle cx="8" cy="8" r="8" fill="#8B0000"/>
+  <text x="8" y="11" font-family="Arial" font-size="10" fill="#fff" text-anchor="middle">!</text>
+`);
+
+// Generate player idle with package sprite
+generateSVG('player_with_package.svg', 32, 48, `
+  <!-- Idle Stance with Package -->
+  <!-- Base Character -->
+  <!-- Trench Coat -->
+  <rect x="12" y="24" width="8" height="20" fill="#D4C4A8" />
+  <rect x="11" y="24" width="10" height="4" fill="#BEB19A" />
+  
+  <!-- Suit -->
+  <rect x="13" y="20" width="6" height="8" fill="#2F2F2F" />
+  
+  <!-- Head -->
+  <rect x="13" y="16" width="6" height="6" fill="#E6D5C1" />
+  
+  <!-- Sunglasses -->
+  <rect x="13" y="18" width="6" height="2" fill="#000000" />
+  
+  <!-- Hair -->
+  <rect x="13" y="16" width="6" height="2" fill="#4A3C31" />
+  
+  <!-- Arms Holding Package -->
+  <rect x="10" y="24" width="3" height="6" fill="#D4C4A8" />
+  <rect x="19" y="24" width="3" height="6" fill="#D4C4A8" />
+  
+  <!-- Package -->
+  <rect x="11" y="26" width="10" height="8" fill="#FFD700" stroke="#FFA000" stroke-width="1" />
+  <circle cx="16" cy="30" r="2" fill="none" stroke="#FFA000" stroke-width="1"/>
+  <rect x="15" y="29" width="2" height="3" fill="#FFA000"/>
+  
+  <!-- Security Aura around Package -->
+  <rect x="9" y="24" width="14" height="12" fill="none" 
+        stroke="#FFE082" stroke-width="1" stroke-dasharray="2,2">
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 16 30" to="360 16 30" dur="3s" repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Shoes -->
+  <rect x="12" y="44" width="4" height="2" fill="#000000" />
+`);
+
+// Generate player walk frame 1 with package
+generateSVG('player_with_package_walk1.svg', 32, 48, `
+  <!-- Walking Frame 1 with Package -->
+  <!-- Base Character -->
+  <!-- Trench Coat -->
+  <rect x="12" y="24" width="8" height="18" fill="#D4C4A8" />
+  <rect x="11" y="24" width="10" height="4" fill="#BEB19A" />
+  
+  <!-- Suit -->
+  <rect x="13" y="20" width="6" height="8" fill="#2F2F2F" />
+  
+  <!-- Head -->
+  <rect x="13" y="16" width="6" height="6" fill="#E6D5C1" />
+  
+  <!-- Sunglasses -->
+  <rect x="13" y="18" width="6" height="2" fill="#000000" />
+  
+  <!-- Hair -->
+  <rect x="13" y="16" width="6" height="2" fill="#4A3C31" />
+  
+  <!-- Arms Holding Package -->
+  <rect x="10" y="24" width="3" height="6" fill="#D4C4A8" />
+  <rect x="19" y="24" width="3" height="6" fill="#D4C4A8" />
+  
+  <!-- Package -->
+  <rect x="11" y="26" width="10" height="8" fill="#FFD700" stroke="#FFA000" stroke-width="1" />
+  <circle cx="16" cy="30" r="2" fill="none" stroke="#FFA000" stroke-width="1"/>
+  <rect x="15" y="29" width="2" height="3" fill="#FFA000"/>
+  
+  <!-- Security Aura around Package -->
+  <rect x="9" y="24" width="14" height="12" fill="none" 
+        stroke="#FFE082" stroke-width="1" stroke-dasharray="2,2">
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 16 30" to="360 16 30" dur="3s" repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Walking Legs Frame 1 -->
+  <rect x="12" y="42" width="3" height="4" fill="#2F2F2F" />
+  <rect x="17" y="42" width="3" height="4" fill="#2F2F2F" />
+`);
+
+// Generate player walk frame 2 with package
+generateSVG('player_with_package_walk2.svg', 32, 48, `
+  <!-- Walking Frame 2 with Package -->
+  <!-- Base Character -->
+  <!-- Trench Coat -->
+  <rect x="12" y="24" width="8" height="18" fill="#D4C4A8" />
+  <rect x="11" y="24" width="10" height="4" fill="#BEB19A" />
+  
+  <!-- Suit -->
+  <rect x="13" y="20" width="6" height="8" fill="#2F2F2F" />
+  
+  <!-- Head -->
+  <rect x="13" y="16" width="6" height="6" fill="#E6D5C1" />
+  
+  <!-- Sunglasses -->
+  <rect x="13" y="18" width="6" height="2" fill="#000000" />
+  
+  <!-- Hair -->
+  <rect x="13" y="16" width="6" height="2" fill="#4A3C31" />
+  
+  <!-- Arms Holding Package -->
+  <rect x="10" y="24" width="3" height="6" fill="#D4C4A8" />
+  <rect x="19" y="24" width="3" height="6" fill="#D4C4A8" />
+  
+  <!-- Package -->
+  <rect x="11" y="26" width="10" height="8" fill="#FFD700" stroke="#FFA000" stroke-width="1" />
+  <circle cx="16" cy="30" r="2" fill="none" stroke="#FFA000" stroke-width="1"/>
+  <rect x="15" y="29" width="2" height="3" fill="#FFA000"/>
+  
+  <!-- Security Aura around Package -->
+  <rect x="9" y="24" width="14" height="12" fill="none" 
+        stroke="#FFE082" stroke-width="1" stroke-dasharray="2,2">
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 16 30" to="360 16 30" dur="3s" repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Walking Legs Frame 2 -->
+  <rect x="14" y="42" width="3" height="4" fill="#2F2F2F" />
+  <rect x="15" y="42" width="3" height="4" fill="#2F2F2F" />
 `);

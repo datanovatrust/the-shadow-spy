@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+  
+  <defs>
+    <radialGradient id="nodeGlow2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#2196F3;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#0D47A1;stop-opacity:1"/>
+    </radialGradient>
+  </defs>
+  <!-- Base Node -->
+  <rect x="8" y="8" width="48" height="48" rx="8" fill="url(#nodeGlow2)" stroke="#64B5F6" stroke-width="2"/>
+  <!-- Computation Indicators -->
+  <path d="M24,32 L40,32 M32,24 L32,40" stroke="#FFFFFF" stroke-width="3"/>
+  <!-- Binary Ring -->
+  <rect x="4" y="4" width="56" height="56" rx="10" fill="none" stroke="#90CAF9" stroke-width="1" 
+    stroke-dasharray="4,4">
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 32 32" to="360 32 32" dur="6s" repeatCount="indefinite"/>
+  </rect>
+  <text x="32" y="36" font-family="monospace" fill="#FFFFFF" font-size="8" text-anchor="middle">NODE 2</text>
+
+</svg>

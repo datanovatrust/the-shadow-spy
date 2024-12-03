@@ -126,6 +126,32 @@ export class PreloadScene extends Phaser.Scene {
         `src/assets/sprites/laser_charge_frame${i}.svg`
       );
     }
+
+    // Load the new friendlies
+    this.load.image('smc_friendly1', 'src/assets/sprites/smc_friendly1.svg');
+    this.load.image('smc_friendly2', 'src/assets/sprites/smc_friendly2.svg');
+    this.load.image('smc_friendly3', 'src/assets/sprites/smc_friendly3.svg');
+    this.load.image('smc_friendly4', 'src/assets/sprites/smc_friendly4.svg');
+
+    // Load the secure package
+    this.load.image('smc_package', 'src/assets/sprites/smc_package.svg');
+
+    // Load the SMC boss
+    this.load.image('smc_boss', 'src/assets/sprites/smc_boss.svg');
+
+    // Load the boss level background
+    this.load.image('smc_boss_background', 'src/assets/sprites/smc_boss_background.svg');
+
+    // Load the boss projectile (if used)
+    this.load.image('boss_projectile', 'src/assets/sprites/boss_projectile.svg');
+
+    // Add these new player package states
+    this.load.image('player_with_package', 'src/assets/sprites/player_with_package.svg');
+    this.load.image('player_with_package_walk1', 'src/assets/sprites/player_with_package_walk1.svg');
+    this.load.image('player_with_package_walk2', 'src/assets/sprites/player_with_package_walk2.svg');
+
+    // Add the package icon for HUD
+    this.load.image('smc_package', 'src/assets/sprites/packageIcon.svg');
   }
 
   create() {

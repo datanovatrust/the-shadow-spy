@@ -66,10 +66,44 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     // Jump variables
     this.jumpCount = 0;
     this.canDoubleJump = true;
+
+    // Add package state
+    this.hasPackage = false;
+
+    // Create package holding animation
+    this.anims.create({
+      key: 'walk_with_package',
+      frames: [
+        { key: 'player_with_package_walk1' },
+        { key: 'player_with_package_walk2' }
+      ],
+      frameRate: 8,
+      repeat: -1
+    });
   }
 
   update() {
     const speed = 160;
+
+    // Update sprite based on package state
+    if (this.hasPackage) {
+      // When moving with package
+      if (this.body.velocity.x !== 0) {
+        this.anims.play('walk_with_package', true);
+      } else {
+        // Standing still with package
+        this.setTexture('player_with_package');
+        this.anims.stop();
+      }
+    } else {
+      // Normal player sprite handling
+      if (this.body.velocity.x !== 0) {
+        this.anims.play('run', true);
+      } else {
+        this.setTexture('player');
+        this.anims.stop();
+      }
+    }
 
     // Apply Polymorphic Encryption effect
     if (this.activePetEffects.PE) {
@@ -333,7 +367,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       helper.speed = 150; // Increased speed
       helper.jumpStrength = -400; // Increased jump height
       helper.attackCooldown = 0; // Initialize attack cooldown
-  
+
       // Ensure aiHelpers group exists
       if (!this.scene.aiHelpers) {
         this.scene.aiHelpers = this.scene.physics.add.group({
@@ -341,11 +375,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         });
       }
       this.scene.aiHelpers.add(helper);
-  
+
       // Ensure physics body size matches the sprite
       helper.body.setSize(helper.width, helper.height);
       helper.body.setOffset(0, 0);
-  
+
       // Define the attack method for the helper
       helper.attack = () => {
         if (this.scene.time.now > helper.attackCooldown) {
@@ -353,22 +387,22 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           const projectile = this.scene.physics.add.sprite(helper.x, helper.y, 'ai_projectile');
           projectile.body.allowGravity = false;
           projectile.setVelocityX(helper.flipX ? -300 : 300);
-  
+
           // Overlap with target
           this.scene.physics.add.overlap(projectile, helper.target, (proj, targ) => {
             targ.takeDamage(1);
             proj.destroy();
           });
-  
+
           // Set cooldown
           helper.attackCooldown = this.scene.time.now + 1000; // 1-second cooldown
         }
       };
-  
+
       // AI helper behavior
       helper.update = () => {
         let target = null;
-  
+
         // Target acquisition
         if (this.scene.boss && this.scene.boss.active) {
           target = this.scene.boss;
@@ -396,29 +430,29 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             }, null)?.enemy;
           }
         }
-  
+
         helper.target = target; // Store the target for use in attack
-  
+
         if (target) {
           // Calculate direction towards target
           const directionX = target.x < helper.x ? -1 : 1;
           helper.setVelocityX(directionX * helper.speed);
           helper.setFlipX(directionX < 0);
-  
+
           // Vertical movement
           const deltaY = target.y - helper.y;
           if (deltaY < -20 && helper.body.blocked.down) {
             // Target is above, attempt to jump
             helper.setVelocityY(helper.jumpStrength);
           }
-  
+
           // Jump over obstacles
           if ((helper.body.blocked.right && directionX > 0) || (helper.body.blocked.left && directionX < 0)) {
             if (helper.body.blocked.down) {
               helper.setVelocityY(helper.jumpStrength);
             }
           }
-  
+
           // Attack if within range
           const distanceToTarget = Phaser.Math.Distance.Between(helper.x, helper.y, target.x, target.y);
           if (distanceToTarget < 300) {
@@ -428,7 +462,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           // No target found, idle
           helper.setVelocityX(0);
         }
-  
+
         // Play run animation if moving
         if (helper.body.velocity.x !== 0) {
           helper.anims.play('helper_run', true);
@@ -437,7 +471,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           helper.setFrame(0);
         }
       };
-  
+
       // Helper takes damage from enemy projectiles
       if (this.scene.enemyProjectiles) {
         this.scene.physics.add.overlap(
@@ -456,7 +490,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           }
         );
       }
-  
+
       // Helper collides with enemies
       if (this.scene.activeEnemies) {
         this.scene.physics.add.overlap(
@@ -470,7 +504,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           }
         );
       }
-  
+
       // Helper collides with boss
       if (this.scene.boss && this.scene.boss.active) {
         this.scene.physics.add.overlap(
@@ -490,7 +524,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         );
       }
     }
-  
+
     // Remove helpers after some time
     this.scene.time.addEvent({
       delay: 10000, // Helpers last 10 seconds

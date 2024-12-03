@@ -43,24 +43,35 @@ export class GameScene extends Phaser.Scene {
     this.player.scene = this;
 
     // Create particle emitter for platform effects
-    this.platformParticleEmitter = this.add.particles(0, 0, 'particle', {
+    this.platformParticleEmitter = this.add.particles(0, 0, {
+      key: 'particle',
+      frame: 0,
+      quantity: 1,
+      frequency: -1,
+      lifespan: 200,
       speed: { min: -50, max: 50 },
       angle: { min: 0, max: 360 },
       scale: { start: 0.2, end: 0 },
+      alpha: { start: 1, end: 0 },
       blendMode: 'ADD',
-      lifespan: 200,
       gravityY: 0,
-      tint: [0xFF10F0, 0x00FFFF],
-      frequency: -1, // Emit manually
+      tint: [0xFF10F0, 0x00FFFF]
     });
 
     // Create particle emitter for projectile effects
-    this.projectileParticleEmitter = this.add.particles(0, 0, 'particle', {
-      scale: { start: 0.2, end: 0 },
-      blendMode: 'ADD',
+    this.projectileParticleEmitter = this.add.particles(0, 0, {
+      key: 'particle',
+      frame: 0,
+      quantity: 1,
+      frequency: -1,
       lifespan: 100,
+      speed: { min: -50, max: 50 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 0.2, end: 0 },
+      alpha: { start: 1, end: 0 },
+      blendMode: 'ADD',
       tint: 0xFF10F0,
-      frequency: -1, // Emit manually
+      emitting: false  // Start disabled
     });
 
     // Collide the player with the platforms and store the colliders
@@ -236,7 +247,7 @@ export class GameScene extends Phaser.Scene {
       this.cleanupScene();
 
       // Finally start the new scene
-      this.scene.start('HomomorphicEncryptionBossFightScene', {
+      this.scene.start('SecureMultipartyBossFightScene', {
         playerData: this.player.getData(),
       });
     });
@@ -1320,12 +1331,20 @@ export class GameScene extends Phaser.Scene {
     }
 
     // Update projectile particle effects
-    if (this.player && this.player.projectiles && this.projectileParticleEmitter) {
-      this.player.projectiles.getChildren().forEach(projectile => {
-        if (projectile && projectile.active && this.frameCounter % 5 === 0) {
-          this.projectileParticleEmitter.emitParticleAt(projectile.x, projectile.y, 1);
-        }
-      });
+    if (this.player?.projectiles && this.projectileParticleEmitter && this.projectileParticleEmitter.texture) {
+      const projectiles = this.player.projectiles.getChildren();
+      if (Array.isArray(projectiles)) {
+        projectiles.forEach(projectile => {
+          if (projectile?.active && projectile?.x && projectile?.y &&
+            this.frameCounter % 5 === 0 && this.projectileParticleEmitter.active) {
+            try {
+              this.projectileParticleEmitter.emitParticleAt(projectile.x, projectile.y, 1);
+            } catch (error) {
+              console.warn('Failed to emit projectile particle:', error);
+            }
+          }
+        });
+      }
     }
 
     // Check if player fell off the world

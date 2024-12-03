@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128">
+  
+  <defs>
+    <radialGradient id="bossCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FF1744;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#D50000;stop-opacity:1"/>
+    </radialGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#FF1744"/>
+    </filter>
+  </defs>
+  <!-- Evil Core -->
+  <circle cx="64" cy="64" r="32" fill="url(#bossCore)" filter="url(#shadow)"/>
+  <!-- Malicious Data Tendrils -->
+  <g stroke="#FF1744" stroke-width="3" fill="none">
+    <path d="M64,32 C32,32 32,96 64,96">
+      <animate attributeName="d" 
+        values="M64,32 C32,32 32,96 64,96;M64,32 C96,32 96,96 64,96;M64,32 C32,32 32,96 64,96" 
+        dur="4s" repeatCount="indefinite"/>
+    </path>
+    <path d="M32,64 C32,32 96,32 96,64">
+      <animate attributeName="d" 
+        values="M32,64 C32,32 96,32 96,64;M32,64 C32,96 96,96 96,64;M32,64 C32,32 96,32 96,64" 
+        dur="4s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  <!-- Corruption Aura -->
+  <circle cx="64" cy="64" r="48" stroke="#FF1744" stroke-width="2" fill="none" stroke-dasharray="8,8">
+    <animate attributeName="r" values="48;52;48" dur="2s" repeatCount="indefinite"/>
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 64 64" to="360 64 64" dur="8s" repeatCount="indefinite"/>
+  </circle>
+  <!-- Evil Eyes -->
+  <circle cx="56" cy="56" r="4" fill="#FFFFFF"/>
+  <circle cx="72" cy="56" r="4" fill="#FFFFFF"/>
+  <circle cx="56" cy="56" r="2" fill="#000000"/>
+  <circle cx="72" cy="56" r="2" fill="#000000"/>
+  <!-- Menacing Mouth -->
+  <path d="M52,72 Q64,80 76,72" stroke="#FFFFFF" stroke-width="3" fill="none"/>
+
+</svg>
