@@ -2,6 +2,7 @@
   
   <!-- Start Button -->
   <rect x="0" y="0" width="200" height="80" rx="20" ry="20" fill="#FF10F0" />
-  <text x="100" y="50" font-size="32" text-anchor="middle" fill="#FFFFFF" font-family="Arial" alignment-baseline="middle">Start</text>
+  <!-- Add some subtle decoration instead of text -->
+  <rect x="20" y="20" width="160" height="40" rx="10" ry="10" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.5" />
 
 </svg>
